@@ -124,7 +124,7 @@ class Result implements ResultInterface {
   {
     $headers = preg_split("/\r\n|\r|\n/", $headerContent);
     
-    list ($this->protocol, $this->code, $text) = explode(' ', $headers[0]);
+    @list ($this->protocol, $this->code, $text) = explode(' ', $headers[0]);
     unset ($headers[0]);
     
     $responses = array(

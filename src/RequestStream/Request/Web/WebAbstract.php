@@ -690,6 +690,9 @@ abstract class WebAbstract implements WebInterface {
 
     // Reset post data
     $this->setPostData(array());
+    
+    // Reset request method type
+    $this->setMethod('GET');
 
     return $this->sendRequest(TRUE);
   }

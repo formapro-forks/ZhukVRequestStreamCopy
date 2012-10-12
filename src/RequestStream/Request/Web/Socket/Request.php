@@ -98,7 +98,10 @@ class Request extends WebAbstract implements RequestInterface {
     
     // Create socket connect
     $this->socket->create();
-
+    
+    // Validate post data and xml data
+    $this->validateXmlPostData();
+    
     // Write headers to socket
     $this->writeHeaderToSocket();
 
@@ -115,10 +118,6 @@ class Request extends WebAbstract implements RequestInterface {
     parent::prepareHeaders();
 
     if ($this->post_data) {
-      if (!in_array($this->getMethod(), array('POST'))) {
-        $this->setMethod('POST');
-      }
-
       // Add content type for request
       $this->addHeader('Content-Type', 'multipart/form-data; boundary=' . $this->getPostBoundary());
 
@@ -161,7 +160,16 @@ class Request extends WebAbstract implements RequestInterface {
       // Write all post data
       $this->socket->writeToSocket($postData);
     }
-
+    
+    // Send XML data
+    if ($this->xml_data && $this->getMethod() == 'POST') {
+      $xmlStr = "\r\n" . $this->getXmlDataString();
+      // Write content length
+      $this->socket->writeToSocket('Content-Length: ' . mb_strlen($xmlStr));
+      
+      $this->socket->writeToSocket("\r\n" . $xmlStr);
+    }
+    
     // End line write to socket
     $this->socket->writeToSocket("\r\n\r\n");
   }

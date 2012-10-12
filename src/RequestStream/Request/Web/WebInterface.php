@@ -119,6 +119,29 @@ interface WebInterface {
   public function deletePostData($name = NULL);
   
   /**
+   * Set XML data
+   *
+   * @param string|DOMDocument $xmlData
+   *
+   * @return this object
+   */
+  public function setXmlData($xmlData);
+  
+  /**
+   * Get XML data
+   *
+   * @return DOMDocument
+   */
+  public function getXmlData();
+  
+  /**
+   * Get XML Data as string
+   *
+   * @return string
+   */
+  public function getXmlDataString();
+  
+  /**
    * Set headers
    *
    * @param array $headers

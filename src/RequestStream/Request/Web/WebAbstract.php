@@ -8,6 +8,7 @@ use RequestStream\Request\Exception\UriException,
     RequestStream\Request\Exception\RequestException,
     RequestStream\Request\Exception\ResultException,
     RequestStream\Request\Exception\RedirectException,
+    RequestException\Request\Exception\XmlDataException,
     RequestStream\Request\Web\Result,
     RequestStream\Stream\Context\Context;
 
@@ -29,6 +30,9 @@ abstract class WebAbstract implements WebInterface {
 
   // Post data
   protected $post_data = array();
+  
+  // Xml data
+  protected $xml_data = NULL;
 
   // Headers
   protected $headers = array();
@@ -236,6 +240,71 @@ abstract class WebAbstract implements WebInterface {
     }
 
     return $this;
+  }
+  
+  /**
+   * Set XML data
+   *
+   * @param string|DOMDocument $xmlData
+   *
+   * @return Request
+   */
+  public function setXmlData($xmlData)
+  {
+    if (is_string($xmlData)) {
+      $domDocument = new \DOMDocument;
+      
+      // Load xml data without warnings
+      if(!@$domDocument->loadXML($xmlData)) {
+        throw new \RuntimeException('Can\'t load xml data to DOMDocument object.');
+      }
+      
+      $this->xml_data = $domDocument;
+    }
+    else if ($xmlData instanceof \DOMDocument) {
+      $this->xml_data = $xmlData;
+    }
+    else {
+      throw new \RuntimeException('XML data must be a string or DOMDocument object.');
+    }
+    
+    return $this;
+  }
+  
+  /**
+   * Get XML data
+   *
+   * @return \DOMDocument
+   */
+  public function getXmlData()
+  {
+    return $this->xml_data;
+  }
+  
+  /**
+   * Get XML Data as string
+   *
+   * @return string
+   */
+  public function getXmlDataString()
+  {
+    if (!$this->xml_data) {
+      throw new \LogicException('Can\'t get XML data as string. XML data is empty.');
+    }
+    
+    return $this->xml_data->saveXML();
+  }
+  
+  /**
+   * Validate XML data and post data
+   *
+   * @throws \LogicException
+   */
+  public function validateXmlPostData()
+  {
+    if ($this->post_data && $this->xml_data) {
+      throw new \LogicException('Can\'t use post data and xml data in request.');
+    }
   }
 
   /**
@@ -575,6 +644,17 @@ abstract class WebAbstract implements WebInterface {
     if ($this->getUserAgent()) {
       // Use link to headers var, becouse addHeader have recursioon to setUserAgent
       $this->headers['User-Agent'] = $this->getUserAgent();
+    }
+    
+    // If using XML data
+    if ($this->xml_data) {
+      $this->addHeader('Content-Type', 'text/xml');
+      $this->setMethod('POST');
+    }
+    
+    // If using post data
+    if ($this->post_data) {
+      $this->setMethod('POST');
     }
   }
 

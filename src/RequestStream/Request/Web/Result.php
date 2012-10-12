@@ -98,7 +98,7 @@ class Result implements ResultInterface {
   {
     $content = explode("\r\n\r\n", $content, 2);
     
-    if (count($content) != 2) {
+    if (!count($content)) {
       throw new ResultException('Can\'t parse page content. Not found header or page section.');
     }
     $this->parsePageHeaders($content[0]);
@@ -111,7 +111,7 @@ class Result implements ResultInterface {
     //  }
     //}
     
-    $this->data = $content[1];
+    $this->data = @$content[1];
     
   }
   

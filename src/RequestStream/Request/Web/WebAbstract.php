@@ -263,7 +263,7 @@ abstract class WebAbstract implements WebInterface {
       $domDocument = new \DOMDocument;
       
       // Load xml data without warnings
-      if(!@$domDocument->loadXML($xmlData)) {
+      if(!@$domDocument->loadXML(trim($xmlData))) {
         throw new \RuntimeException('Can\'t load xml data to DOMDocument object.');
       }
       

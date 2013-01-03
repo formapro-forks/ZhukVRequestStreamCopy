@@ -11,11 +11,11 @@
       "email": "zhuk2205@gmail.com"
     }
   ],
-  
+
   "require": {
-    "php": ">=5.3.0"
+    "php": ">=5.3.3"
   },
-  
+
   "autoload": {
     "psr-0": { "RequestStream": "src/" }
   }

@@ -9,13 +9,11 @@
  * file that was distributed with this source code
  */
 
-
 namespace RequestStream\Stream\Exception;
-
 
 /**
  * Exception core for control socket exception
  */
-class SocketErrorException extends \RuntimeException {
-  
+class SocketErrorException extends \RuntimeException
+{
 }

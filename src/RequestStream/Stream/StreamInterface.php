@@ -21,32 +21,32 @@ interface StreamInterface {
    * @return string
    */
   public static function getTransports();
-  
+
   /**
    * Is validate transport in system
-   * 
+   *
    * @param string $transport
-   * 
+   *
    * @return bool
    */
   public static function isTransport($transport);
-  
+
   /**
    * Get all allowed wrappers in system
    *
    * @return array
    */
   public static function getWrappers();
-  
+
   /**
    * Is wrapper allowed in system
-   * 
+   *
    * @param string $wrapper
    *
    * @return bool
    */
   public static function isWrapper($wrapper);
-  
+
   /**
    * Get full path file, included all paths
    *
@@ -55,7 +55,7 @@ interface StreamInterface {
    * @return string
    */
   public static function resolveIncludePath($path);
-  
+
   /**
    * Set encoding in stream
    *
@@ -64,9 +64,10 @@ interface StreamInterface {
    * @return bool
    */
   public function setEncoding($encoding);
-  
+
   /**
    * Get all contents from stream
+   * @see http://www.php.net/manual/en/function.stream-get-contents.php
    *
    * @param int $maxLength
    * @param int $offset
@@ -74,7 +75,7 @@ interface StreamInterface {
    * @return string
    */
   public function getContents($maxLength = -1, $offset = -1);
-  
+
   /**
    * Blocking stream
    *
@@ -83,7 +84,7 @@ interface StreamInterface {
    * @return bool
    */
   public function setBlocking($mode);
-  
+
   /**
    * Set read buffer for stream
    *
@@ -92,7 +93,7 @@ interface StreamInterface {
    * @return bool
    */
   public function setReadBuffer($buffer);
-  
+
   /**
    * Set write buffer for stram
    *
@@ -101,7 +102,7 @@ interface StreamInterface {
    * @return bool
    */
   public function setWriteBuffer($buffer);
-  
+
   /**
    * Set timeout for stream
    *
@@ -111,7 +112,7 @@ interface StreamInterface {
    * @return bool
    */
   public function setTimeout($second, $milisecond = 0);
-  
+
   /**
    * Is created stream
    *
@@ -120,13 +121,12 @@ interface StreamInterface {
    * @return bool
    */
   public function is($autoload = FALSE);
-  
+
   /**
    * Create stream
-   * {@inherit}
    */
   public function create();
-  
+
   /**
    * Get resource of stream.
    *  If stream not opened, create strem.

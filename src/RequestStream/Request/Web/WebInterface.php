@@ -14,15 +14,14 @@ namespace RequestStream\Request\Web;
 /**
  * Interface for control web request
  */
-interface WebInterface {
+interface WebInterface
+{
     /**
      * Set proxy
      *
-     * @param string $uri
-     *
-     * @return this object
+     * @param string|Proxy $proxy
      */
-    public function setProxy($uri);
+    public function setProxy($proxy);
 
     /**
      * Get proxy
@@ -35,9 +34,6 @@ interface WebInterface {
      * Set method foe request (GET, POST, HEAD, etc...)
      *
      * @param string $method
-     *
-     * @return this object
-     *    Exception, if method not allowed
      */
     public function setMethod($method);
 
@@ -51,11 +47,9 @@ interface WebInterface {
     /**
      * Set user agent
      *
-     * @param string $user_agent
-     *
-     * @return this object
+     * @param string $userAgent
      */
-    public function setUserAgent($user_agent);
+    public function setUserAgent($userAgent);
 
     /**
      * Get used user agent
@@ -68,26 +62,22 @@ interface WebInterface {
      * Set random user agent
      *    Generate user agent
      *
-     * @return this object
+     * @param string $browser
      */
-    public function setUserAgentRandom();
+    public function setUserAgentRandom($browser);
 
     /**
      * Set cookies for request
      *
-     * @param array $cookies
-     *
-     * @return this object
+     * @param array|Iterator $cookies
      */
-    public function setCookies(array $cookie);
+    public function setCookies($cookie);
 
     /**
      * Set item cookie
      *
      * @param string $name
-     * @param string $value (Optional)
-     *
-     * @return this object
+     * @param string $value
      */
     public function addCookie($name, $value = NULL);
 
@@ -96,14 +86,17 @@ interface WebInterface {
      *
      * @param string $name
      */
-    public function deleteCookie($name = NULL);
+    public function deleteCookie($name);
+
+    /**
+     * Clear all cookies
+     */
+    public function clearCookies();
 
     /**
      * Set post data
      *
      * @param array $data
-     *
-     * @return this object
      */
 
     public function setPostData(array $data);
@@ -113,8 +106,6 @@ interface WebInterface {
      *
      * @param string|array $name
      * @param mixed $value
-     *
-     * @return this object
      */
     public function addPostData($name, $value = NULL);
 
@@ -122,8 +113,6 @@ interface WebInterface {
      * Delete post data
      *
      * @param string $name
-     *
-     * @return this object
      */
     public function deletePostData($name = NULL);
 
@@ -131,8 +120,6 @@ interface WebInterface {
      * Set XML data
      *
      * @param string|DOMDocument $xmlData
-     *
-     * @return this object
      */
     public function setXmlData($xmlData);
 
@@ -152,28 +139,21 @@ interface WebInterface {
 
     /**
      * Validate XML && Post data
-     *
-     * @throw
-     *    LogicException
      */
     public function validateXmlPostData();
 
     /**
      * Set headers
      *
-     * @param array $headers
-     *
-     * @return this object
+     * @param array|Itarator|HeadersBag $headers
      */
-    public function setHeaders(array $headers);
+    public function setHeaders($headers);
 
     /**
      * Add header
      *
      * @param string|array $name
      * @param mixed $value
-     *
-     * @return this object
      */
     public function addHeader($name, $value = NULL);
 
@@ -190,8 +170,6 @@ interface WebInterface {
      * Delete headers
      *
      * @param string $name
-     *
-     * @return this object
      */
     public function deleteHeader($name = NULL);
 
@@ -199,29 +177,13 @@ interface WebInterface {
      * Set uri for request
      *
      * @param string $uri
-     *
-     * @return this object
-     *
-     * @throws Exception\UriException
      */
     public function setUri($uri);
-
-    /**
-     * Set user password for connect
-     *
-     * @param string $user
-     * @param string $password
-     *
-     * @return this object
-     */
-    public function setUserPass($user, $password);
 
     /**
      * Set HTTP Version protocol
      *
      * @param string $version
-     *
-     * @return this object
      */
     public function setHttpVersion($version);
 
@@ -236,8 +198,6 @@ interface WebInterface {
      * Set referer for request
      *
      * @param string $uri
-     *
-     * @return this object
      */
     public function setReferer($uri);
 
@@ -245,8 +205,6 @@ interface WebInterface {
      * Set max count redirect
      *
      * @param int $count
-     *
-     * @return this object
      */
     public function setCountRedirect($count = 0);
 
@@ -254,8 +212,6 @@ interface WebInterface {
      * Set using cookie in redirected
      *
      * @param bool $status
-     *
-     * @return this object
      */
     public function setRedirectCookie($status = TRUE);
 
@@ -264,7 +220,7 @@ interface WebInterface {
      *
      * @param bool $reset
      *
-     * @return Result object
+     * @return Result
      */
     public function sendRequest($reset = FALSE);
 
@@ -273,7 +229,7 @@ interface WebInterface {
      *
      * @param bool $reset
      *
-     * @return Result object
+     * @return Result
      */
     public function getResult($reset = FALSE);
 }

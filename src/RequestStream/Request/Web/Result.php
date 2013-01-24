@@ -17,30 +17,45 @@ use RequestStream\Request\Exception\ResultException;
 /**
  * Base core for control result web request
  */
-class Result implements ResultInterface {
-    // Data
-    protected $data = NULL;
+class Result implements ResultInterface
+{
+    /**
+     * @var string
+     */
+    protected $data;
 
-    // Headers
-    protected $headers = array();
+    /**
+     * @var HeadersBag
+     */
+    protected $headers;
 
-    // Code
-    protected $code = NULL;
+    /**
+     * @var integer
+     */
+    protected $code;
 
-    // Response
-    protected $response = NULL;
+    /**
+     * @var string
+     */
+    protected $response;
 
-    // Protocol
-    protected $protocol = NULL;
+    /**
+     * @var string
+     */
+    protected $protocol;
 
-    // Cookies
-    protected $cookies = array();
+    /**
+     * @var CookiesBag
+     */
+    protected $cookies;
 
     /**
      * Construct
      */
     public function __construct()
     {
+        $this->headers = new HeadersBag;
+        $this->cookies = new CookiesBag;
     }
 
     /**
@@ -112,14 +127,6 @@ class Result implements ResultInterface {
 
         $this->parsePageHeaders($content[0]);
 
-        //if ($contentType = $this->getHeaders('Content-Type')) {
-        //  @list($null, $charset) = explode('=', rtrim($contentType));
-        //
-        //  if (mb_strtolower($charset) != 'UTF-8') {
-        //    $content[1] = mb_convert_encoding($content[1], 'UTF-8', mb_detect_encoding($content[1]));
-        //  }
-        //}
-
         $this->data = @$content[1];
 
     }
@@ -149,77 +156,12 @@ class Result implements ResultInterface {
         foreach ($headers as $h) {
             list ($key, $value) = explode(':', $h, 2);
 
-            if ($key == 'Set-Cookie') {
-                if (!isset($this->headers['Set-Cookie'])) {
-                    $this->headers['Set-Cookie'] = array();
-                }
-
-                $cookie = self::parseCookie($value);
-
-                $cookieName = $cookie['name'];
-                $this->headers['Set-Cookie'][$cookieName] = $cookie['value'];
-                unset ($cookie['name']);
-                $this->cookies[$cookieName] = $cookie;
+            if (strtolower($key) == 'set-cookie') {
+                $this->cookies->add(Cookie::parseFromString($value), NULL);
             }
             else {
                 $this->headers[trim($key)] = trim($value);
             }
         }
-    }
-
-    /**
-     * Parse cookie
-     */
-    public static function parseCookie($cookieStr)
-    {
-        // Get base values from cookie string
-        @list ($value, $expires, $path, $domain, $secure, $httpOnly) = explode(';', $cookieStr);
-
-        // Get name, value, path etc... from cookie item
-        @list ($name, $value) = explode('=', trim($value));
-        @list ($null, $expires) = explode('=', trim($expires));
-        @list ($null, $path) = explode('=', trim($path));
-        @list ($null, $domain) = explode('=', trim($domain));
-
-        // If not added expires to set cookie
-        if ($expires == '/') {
-            $expires = NULL; $path = '/';
-        }
-
-        return array(
-            'name' => $name,
-            'value' => $value,
-            'expires' => $expires,
-            'path' => $path,
-            'domain' => ltrim($domain, '.'),
-            'secure' => (bool) $secure,
-            'http_only' => (bool) $httpOnly
-        );
-    }
-
-    /**
-     * Get cookie by domain
-     */
-    public function getCookiesByFilter(array $filters)
-    {
-        $filters += array(
-            'domain' => NULL,
-            'path' => NULL,
-            'expires' => NULL
-        );
-
-        $coks = array();
-
-        foreach ($this->cookies as $cName => $cValue) {
-            // Filter domain
-            if ($filters['domain'] && ($cValue['domain'] && ltrim($filters['domain'], '.') != ltrim($cValue['domain'], '.')) ) {
-                continue;
-            }
-
-            // Here code for filter: path, expires, etc...
-            $coks[$cName] = $cValue;
-        }
-
-        return $coks;
     }
 }

@@ -76,28 +76,4 @@ interface ResultInterface {
      *    Exception, if not allowed formats
      */
     public function parsePageContent($content);
-
-    /**
-     * Parse cookie string
-     *
-     * @param string $cookie
-     *
-     * @return array
-     *    - name (string) => Name of cookie
-     *    - value (string)
-     *    - domain (string)
-     *    - expire (string)
-     *    - securi (bool)
-     *    - http_only (bool)
-     */
-    public static function parseCookie($cookie);
-
-    /**
-     * Get cookie by filters
-     *
-     * @param array $filters
-     *
-     * @return array
-     */
-    public function getCookiesByFilter(array $filters);
 }

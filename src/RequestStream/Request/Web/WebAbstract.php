@@ -23,17 +23,26 @@ use RequestStream\Request\Exception\UriException,
 /**
  * Abstract core for web request
  */
-abstract class WebAbstract implements WebInterface {
-    // Proxy
+abstract class WebAbstract implements WebInterface
+{
+    /**
+     * @var Proxy
+     */
     protected $proxy = NULL;
 
-    // Method
+    /**
+     * @var string
+     */
     protected $method = 'GET';
 
-    // User agent
-    protected $user_agent = NULL;
+    /**
+     * @var string
+     */
+    protected $userAgent = NULL;
 
-    // Cookies
+    /**
+     * @var CookiesBag
+     */
     protected $cookies = array();
 
     // Post data
@@ -42,62 +51,87 @@ abstract class WebAbstract implements WebInterface {
     // Xml data
     protected $xml_data = NULL;
 
-    // Headers
+    /**
+     * @var HeadersBag
+     */
     protected $headers = array();
 
-    // Uri
+    /**
+     * @var Uri
+     */
     protected $uri = NULL;
 
-    // User login
-    protected $user_login = array('user' => NULL, 'pass' => NULL);
+    /**
+     * @var array
+     */
+    protected $userLogin = array();
 
-    // HTTP Version
-    protected $http_version = '1.0';
+    /**
+     * @var string
+     */
+    protected $httpVersion = '1.0';
 
-    // Result
-    protected $result = NULL;
+    /**
+     * @var Result
+     */
+    protected $result;
 
     // Sending request
     protected $sending_request = FALSE;
 
-    // Count redirect
-    protected $count_redirect = 5;
+    /**
+     * @var integer
+     */
+    protected $countRedirect = 5;
 
-    // Count use redirect
-    protected $count_use_redirect = 0;
+    /**
+     * @var boolean
+     */
+    protected $redirectUseCookie = TRUE;
 
-    // Use redirect cookies
-    protected $redirect_use_cookie = TRUE;
-
-    // Boudary
+    /**
+     * @var string
+     */
     private $_boundary = NULL;
 
     /**
      * Construct
+     *
+     * @param string|Uri $uri
      */
     public function __construct($uri = NULL)
     {
         if ($uri) {
             $this->setUri($uri);
         }
+
+        $this->cookies = new CookiesBag();
+        $this->headers = new HeadersBag();
+        $this->userLogin = array('user' => NULL, 'pass' => NULL);
     }
 
-
     /**
-     * Set proxy
-     *
-     * @param string $uri
-     *
-     * @return this object
+     * @{inerhitDoc}
      */
-    public function setProxy($uri)
+    public function setProxy($proxy)
     {
-        $this->proxy = $this->parseUri($uri);
+        if ($proxy instanceof Proxy) {
+            $this->proxy = $proxy;
+        }
+        else {
+            try {
+                $this->proxy = Proxy::parseFromString($proxy);
+            }
+            catch (\Exception $e) {
+                throw new \RuntimeException('Can\'t set proxy core.', 0, $e);
+            }
+        }
+
         return $this;
     }
 
     /**
-     * Get proxy
+     * @{inerhitDoc}
      */
     public function getProxy()
     {
@@ -105,16 +139,19 @@ abstract class WebAbstract implements WebInterface {
     }
 
     /**
-     * Set method
-     *
-     * @param string $method
+     * @{inerhitDoc}
      */
     public function setMethod($method)
     {
         $method = strtoupper($method);
 
-        if (!in_array($method, array('OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'TRACE', 'LINK', 'UNLINK', 'CONNECT'))) {
-            throw new \InvalidArgumentException(sprintf('Undefined method <b>%s</b>.', $method));
+        $allowedMethods = array('OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'TRACE', 'LINK', 'UNLINK', 'CONNECT');
+        if (!in_array($method, $allowedMethods)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Undefined method "%s". Allowed methods: "%s"',
+                $method,
+                implode('", "', $allowedMethods)
+            ));
         }
 
         $this->method = $method;
@@ -122,7 +159,7 @@ abstract class WebAbstract implements WebInterface {
     }
 
     /**
-     * Get method
+     * @{inerhitDoc}
      */
     public function getMethod()
     {
@@ -130,75 +167,103 @@ abstract class WebAbstract implements WebInterface {
     }
 
     /**
-     * Set user agent
-     *
-     * @param string $user_agent
+     * @{inerhitDoc}
      */
-    public function setUserAgent($user_agent)
+    public function setUserAgent($userAgent)
     {
-        $this->user_agent = $user_agent;
+        $this->userAgent = $userAgent;
+
         return $this;
     }
 
     /**
-     * Get user agent
+     * @{inerhitDoc}
      */
     public function getUserAgent()
     {
-        return $this->user_agent;
+        return $this->userAgent;
     }
 
     /**
-     * Set random user agent
+     * @{inerhitDoc}
      */
-    public function setUserAgentRandom()
+    public function setUserAgentRandom($browser = NULL)
     {
-        $this->user_agent = $this->generateRandomUserAgent();
+        $this->userAgent = UserAgentGenerator::generateUserAgent($browser);
     }
 
     /**
-     * Set cookies
-     *
-     * @param array $cookies
+     * @{inerhitDoc}
      */
-    public function setCookies(array $cookies)
+    public function setCookies($cookies)
     {
-        $this->cookies = $cookies;
+        if (!is_array($cookies) && !$cookies instanceof \Iterator && !$cookies instanceof CookiesBag) {
+            throw new \InvalidArgumentException('Cookies must be CookiesBag object or iterable.');
+        }
+
+        if ($cookies instanceof CookiesBag) {
+            $this->cookies = $cookies;
+            return $this;
+        }
+
+        $this->cookies = new CookiesBag;
+
+        foreach ($cookies as $cookieName => $cookie) {
+            if ($cookie instanceof Cookie) {
+                $this->addCookie($cookie);
+            }
+            else {
+                $this->addCookie($cookieName, $cookie);
+            }
+        }
+
         return $this;
     }
 
     /**
-     * Set one cookie
-     *
-     * @param string $name
-     *
-     * @param mixed $value
+     * @{inerhitDoc}
      */
     public function addCookie($name, $value = NULL)
     {
-        if (is_array($name)) {
-            $this->cookies = array_merge($this->cookies, $name);
+        // Itarable
+        if ($name instanceof \Iterator || is_array($name)) {
+            foreach ($name as $cookieName => $cookie) {
+                $this->addCookie($cookieName, $cookie);
+            }
+            return $this;
+        }
+
+        // Cookie object
+        if ($name instanceof Cookie) {
+            $this->cookies[$name->getName()] = $name;
+        }
+        else if ($value instanceof Cookie) {
+            $this->cookies[$value->getName()] = $value;
         }
         else {
-            $this->cookies[$name] = $value;
+            // Create new cookie object
+            $this->cookies[$name] = new Cookie($name, $value);
         }
 
         return $this;
     }
 
     /**
-     * Delete cookie
-     *
-     * @param string $name
+     * @{inerhitDoc}
      */
-    public function deleteCookie($name = NULL)
+    public function deleteCookie($name)
     {
-        if (is_null($name)) {
-            $this->cookies = array();
-        }
-        else {
-            unset ($this->cookies[$name]);
-        }
+        unset ($this->cookies[$name]);
+
+        return $this;
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function clearCookies()
+    {
+        $this->cookies = new CookiesBag();
 
         return $this;
     }
@@ -316,13 +381,26 @@ abstract class WebAbstract implements WebInterface {
     }
 
     /**
-     * Set headers
-     *
-     * @param array $headers
+     * @{inerhitDoc}
      */
-    public function setHeaders(array $headers)
+    public function setHeaders($headers)
     {
-        return $this->addHeader($headers);
+        if (!is_array($headers) && !$headers instanceof \Iterator && !$headers instanceof CookiesBag) {
+            throw new \InvalidArgumentException('Headers must be HeadersBag object or iterable.');
+        }
+
+        if ($headers instanceof HeadersBag) {
+            $this->headers = $headers;
+            return $this;
+        }
+
+        $this->headers = new HeadersBag();
+
+        foreach ($headers as $headerName => $headerValue) {
+            $this->addHeader($headerName, $headerValue);
+        }
+
+        return $this;
     }
 
     /**
@@ -344,18 +422,6 @@ abstract class WebAbstract implements WebInterface {
                 case 'user_agent':
                 case 'user-agent':
                     $this->setUserAgent($valueHeader);
-                    break;
-
-                case 'cookie':
-                    if (is_array($valueHeader)) {
-                        $this->setCookies($valueHeader);
-                    }
-                    else if (is_string($valueHeader)) {
-                        // Here code for parse string
-                    }
-                    else if (is_object($valueHeader) && method_exists($valueHeader, '__toString')) {
-                        // Here code for compile object to string and parse string
-                    }
                     break;
 
                 default:
@@ -392,30 +458,18 @@ abstract class WebAbstract implements WebInterface {
     }
 
     /**
-     * Set uri
+     * @{inerhitDoc}
      */
     public function setUri($uri)
     {
-        $this->uri = $this->parseUri($uri);
-
-        // Set user login (Basic authorization)
-        if ($this->uri['user']) {
-            $this->setUserPass($this->uri['user'], $this->uri['pass']);
+        if ($uri instanceof Uri) {
+            $this->uri = $uri;
+        }
+        else {
+            $this->uri = Uri::parseFromString($uri);
         }
 
         return $this;
-    }
-
-    /**
-     * Set login/password for request
-     *
-     * @param string $user
-     *
-     * @param string $password
-     */
-    public function setUserPass($user, $pass)
-    {
-        $this->user_login = array('user' => $user, 'pass' => $pass);
     }
 
     /**
@@ -425,7 +479,8 @@ abstract class WebAbstract implements WebInterface {
      */
     public function setHttpVersion($version)
     {
-        $this->http_version = $version;
+        $this->httpVersion = $version;
+
         return $this;
     }
 
@@ -436,7 +491,7 @@ abstract class WebAbstract implements WebInterface {
      */
     public function getHttpVersion()
     {
-        return $this->http_version;
+        return $this->httpVersion;
     }
 
     /**
@@ -446,15 +501,14 @@ abstract class WebAbstract implements WebInterface {
      */
     public function setReferer($referer)
     {
-        try {
-            $parseUri = $this->parseUri($referer);
+        if ($referer instanceof Uri) {
+            $this->headers['Referer'] = $referer;
         }
-        catch(\Exception $e) {
-            throw new UriException('Can\'t set referer. Error of parse uri: ' . $e->getMessage());
+        else {
+            $this->headers['Referer'] = Uri::parseFromString($referer);
         }
 
-        $referer = $parseUri['scheme'] . '://' . $parseUri['host'] . $parseUri['path'] . ($parseUri['query'] ? '?' . $parseUri['query'] : '');
-        $this->headers['Referer'] = $referer;
+        return $this;
     }
 
     /**
@@ -475,157 +529,8 @@ abstract class WebAbstract implements WebInterface {
      */
     public function setRedirectCookie($status = TRUE)
     {
-        $this->redirect_use_cookie = (bool) $status;
+        $this->redirectUseCookie = (bool) $status;
         return $this;
-    }
-
-    /**
-     * Parse uri
-     */
-    protected function parseUri($uri)
-    {
-        if (preg_match('/^([a-z]{0,5}):\/\//', $uri, $tmp)) {
-            if (!in_array($tmp[1], array('http', 'https'))) {
-                throw new UriException(sprintf('Uri must be beginning from <b>http</b> or <b>https</b> (Beginning with: <b>%s</b>)', $tmp[1]));
-            }
-        }
-        else {
-            $uri = 'http://' . $uri;
-        }
-
-        if (!$parseUri = @parse_url($uri)) {
-            throw new \InvalidArgumentException(sprintf('Can\'t parse uri <b>%s</b>. Please check uri!', $uri));
-        }
-
-        if (strpos($parseUri['host'], '.') === FALSE) {
-            throw new \InvalidArgumentException(sprintf('Can\'t parse uri <b>%s</b>. Please check uri!', $uri));
-        }
-
-        $parseUri += array(
-            'user' => NULL,
-            'pass' => NULL,
-            'fragment' => NULL,
-            'query' => NULL,
-            'uri' => $uri,
-            'port' => NULL,
-            'path' => '/'
-        );
-
-        //$parseUri['path'] = rtrim($parseUri['path'], '/');
-
-        if ($parseUri['query']) {
-            $qi = explode('&', $parseUri['query']);
-
-            // Query encode for URL
-            array_walk($qi, function(&$q){
-                @list( $name, $param ) = explode( '=', $q, 2 );
-                $q = ( is_null( $param ) ) ? urlencode( $name ) : urlencode( $name ) . '=' . urlencode( $param );
-            });
-
-            $parseUri['query'] = implode('&', $qi);
-        }
-
-        return $parseUri;
-    }
-
-    /**
-     * Generate random user agent
-     */
-    public function generateRandomUserAgent(array $options = array())
-    {
-        //Possible processors on Linux
-        $linux_proc = array( 'i686', 'x86_64' );
-
-        //Mac processors (i also added U;)
-        $mac_proc   = array( 'Intel', 'PPC', 'U; Intel', 'U; PPC' );
-
-        //Add as many languages as you like.
-        $lang = array(
-            'ru',
-            'ru-RU',
-        );
-
-        $a_browser = array( 'Firefox', 'Opera', 'Chrome', 'IE', 'Safari' );
-        //$options['browser'] = array( 'Opera' );
-        if (isset($options['browser'])){
-            if (!array_diff($options['browser'], $a_browser)) {
-                $type = $options['browser'][array_rand( $options['browser'] )];
-            }
-        }
-
-        if (!isset( $type )) {
-            $type = $a_browser[array_rand($a_browser)];
-        }
-
-        switch ( $type ){
-            case 'Firefox':
-                // Generate Mozilla Firefox agent
-                date_default_timezone_set( 'Europe/Helsinki' );
-                $ver = array(
-                  date('Ymd', rand(strtotime('2011-1-1'), time())) . ' Firefox/' . rand(5, 7) . '.0',
-                  date('Ymd', rand(strtotime('2011-1-1'), time())) . ' Firefox/' . rand(5, 7) . '.0.1',
-                  date('Ymd', rand(strtotime('2010-1-1'), time())) . ' Firefox/3.6.' . rand(1, 20),
-                  date('Ymd', rand(strtotime('2010-1-1'), time())) . ' Firefox/3.8'
-                );
-
-                $platforms = array(
-                  '(Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . '; ' . $lang[array_rand($lang, 1)] . '; rv:1.9.' . rand(0, 2) . '.20) Gecko/' . $ver[array_rand($ver, 1)],
-                  '(X11; Linux ' . $linux_proc[array_rand($linux_proc, 1)] . '; rv:' . rand(5, 7) . '.0) Gecko/' . $ver[array_rand($ver, 1)],
-                  '(Macintosh; ' . $mac_proc[array_rand($mac_proc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ' rv:' . rand(2, 6) . '.0) Gecko/' . $ver[array_rand($ver, 1)]
-                );
-
-                $ua = "Mozilla/5.0 " . $platforms[array_rand($platforms, 1)];
-                break;
-
-            case 'Safari':
-                // Generate Safari agent
-                $saf = rand(531, 535) . '.' . rand(1, 50) . '.' . rand(1, 7);
-                $ver = (rand(0, 1) == 0)
-                        ? rand(4, 5) . '.' . rand(0, 1)
-                        : $ver = rand(4, 5) . '.0.' . rand(1, 5);
-
-                $platforms = array(
-                    '(Windows; U; Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/{$ver} Safari/{$saf}",
-                    '(Macintosh; U; ' . $mac_proc[array_rand($mac_proc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ' rv:' . rand(2, 6) . '.0; ' . $lang[array_rand($lang, 1)] . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/{$ver} Safari/{$saf}",
-                    '(iPod; U; CPU iPhone OS ' . rand(3, 4) . '_' . rand(0, 3) . ' like Mac OS X; ' . $lang[array_rand($lang, 1)] . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/" . rand(3, 4) . ".0.5 Mobile/8B" . rand(111, 119) . " Safari/6{$saf}",
-                );
-
-                $ua = "Mozilla/5.0 " . $platforms[array_rand($platforms, 1)];
-                break;
-
-            case 'IE':
-                // Generate Internet Explorer agent
-                $platforms = array(
-                    '(compatible; MSIE ' . rand(5, 9) . '.0; Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . '; Trident/' . rand(3, 5) . '.' . rand(0, 1) . ')'
-                );
-
-                $ua = "Mozilla/" . rand(4, 5) . ".0 " . $platforms[array_rand($platforms, 1)];
-                break;
-
-            case 'Opera':
-                // Generate Opera agent
-                $platforms = array(
-                    '(X11; Linux ' . $linux_proc[array_rand($linux_proc, 1)] . '; U; ' . $lang[array_rand($lang, 1)] . ') Presto/2.9.' . rand(160, 190) . ' Version/' . rand(10, 12) . '.00',
-                    '(Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . '; U; ' . $lang[array_rand($lang, 1)] . ') Presto/2.9.' . rand(160, 190) . ' Version/' . rand(10, 12) . '.00'
-                );
-                $ua = "Opera/9." . rand(10, 99) . ' ' . $platforms[array_rand($platforms, 1)];
-                break;
-
-            case 'Chrome':
-                // Generate Chrome agent
-                $saf = rand(531, 536) . rand(0, 2);
-
-                $platforms = array(
-                    '(X11; Linux ' . $linux_proc[array_rand($linux_proc, 1)] . ") AppleWebKit/{$saf} (KHTML, like Gecko) Chrome/" . rand(13, 15) . '.0.' . rand(800, 899) . ".0 Safari/$saf",
-                    '(Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . ") AppleWebKit/{$saf} (KHTML, like Gecko) Chrome/" . rand(13, 15) . '.0.' . rand(800, 899) . ".0 Safari/{$saf}",
-                    '(Macintosh; U; ' . $mac_proc[array_rand($mac_proc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ") AppleWebKit/{$saf} (KHTML, like Gecko) Chrome/" . rand(13, 15) . '.0.' . rand(800, 899) . ".0 Safari/{$saf}"
-                );
-
-                $ua = 'Mozilla/5.0' . $platforms[array_rand($platforms, 1)];
-                break;
-      }
-
-      return $ua;
     }
 
     /**
@@ -654,7 +559,7 @@ abstract class WebAbstract implements WebInterface {
 
         // Added user agent
         if ($this->getUserAgent()) {
-            // Use link to headers var, becouse addHeader have recursioon to setUserAgent
+            // Use link to headers var, becouse addHeader have recursion to setUserAgent
             $this->headers['User-Agent'] = $this->getUserAgent();
         }
 
@@ -721,7 +626,7 @@ abstract class WebAbstract implements WebInterface {
 
         // Reset count use redirect
         if (!$reset) {
-            $this->count_use_redirect = 0;
+            $this->countUseRedirect = 0;
         }
 
         // Create request
@@ -750,11 +655,11 @@ abstract class WebAbstract implements WebInterface {
     protected function sendRequestRedirect()
     {
         // Create a new socket connection and new request
-        if ($this->count_redirect && $this->count_use_redirect >= $this->count_redirect) {
-            throw new RedirectException(sprintf('Many redirect: <b>%s</b>', $this->count_use_redirect));
+        if ($this->count_redirect && $this->countUseRedirect >= $this->count_redirect) {
+            throw new RedirectException(sprintf('Many redirect: <b>%s</b>', $this->countUseRedirect));
         }
 
-        $this->count_use_redirect++;
+        $this->countUseRedirect++;
 
         $refererUri = $this->uri['uri'];
         $this->setReferer(urldecode($refererUri));
@@ -771,10 +676,8 @@ abstract class WebAbstract implements WebInterface {
         $this->setUri($locationTo);
 
         // If used save cookie for redirect
-        if ($this->redirect_use_cookie) {
-            $setCookies = $this->result->getCookiesByFilter(array(
-                'domain' => $this->uri['host']
-            ));
+        if ($this->redirectUseCookie) {
+            $setCookies = new CookieFilter($this->result->getCookies());
 
             $this->addCookie($setCookies);
         }

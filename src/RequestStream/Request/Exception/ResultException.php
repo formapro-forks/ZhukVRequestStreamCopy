@@ -9,12 +9,11 @@
  * file that was distributed with this source code
  */
 
-
 namespace RequestStream\Request\Exception;
 
 /**
  * Exception for control result errors
  */
-class ResultException extends \RuntimeException {
-  
+class ResultException extends \RuntimeException
+{
 }

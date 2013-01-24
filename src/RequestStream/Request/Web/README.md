@@ -5,7 +5,7 @@ Core Concepts
 -------------
 
 To use the query you want to use this type of query. For example a socket or stream.
-Vebabstratst - is abstract core for sending requests HTTP and HTTPS.
+WebAbstratst - is abstract core for sending requests HTTP and HTTPS.
 
 
 Usage
@@ -15,8 +15,6 @@ Basic usage:
 Basic http request to domain.
 
 ```php
-<?php
-
 use RequestStream\Request\Web\Socket\Request;
 
 $request = new Request('http://google.com');
@@ -32,8 +30,6 @@ $requestCookies = $result->getCookies();
 
 Using POST data and cookies
 ```php
-<?php
-
 // Add POST data
 $request->addPostData('keyName', 'keyValue');
 // Or
@@ -41,7 +37,7 @@ $request->addPostData(array('keyName' => 'KeyValue'));
 
 // Add cookies
 $request->addCookie('cookieName', 'cookieValue');
-// Ot
+// Or
 $request->addCookie(array('cookieName' => 'cookieValue'));
 
 ```
@@ -57,10 +53,6 @@ $request->setUserAgentRandom();
 
 If your want add other headers, please usage:
 ```php
-<?php
-
 $request->addHeader('headerName', 'headerValue');
 // Or
 $request->addHeader(array('headerName' => 'headerValue'));
-
-

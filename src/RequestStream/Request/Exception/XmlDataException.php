@@ -16,5 +16,4 @@ namespace RequestStream\Request\Exception;
  */
 class XmlDataException extends \RuntimeException
 {
-  
 }

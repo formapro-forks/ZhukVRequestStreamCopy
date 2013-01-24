@@ -11,10 +11,9 @@
 
 namespace RequestStream\Request\Exception;
 
-
 /**
  * Core for control redirect error
  */
-class RedirectException extends \RuntimeException {
-  
+class RedirectException extends \RuntimeException
+{
 }

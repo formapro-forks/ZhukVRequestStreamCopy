@@ -9,12 +9,11 @@
  * file that was distributed with this source code
  */
 
-
 namespace RequestStream\Request\Exception;
 
 /**
  * Exception for control headers exception
  */
-class HeadersException extends \RuntimeException{
-  
+class HeadersException extends \RuntimeException
+{
 }

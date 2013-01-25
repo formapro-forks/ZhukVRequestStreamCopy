@@ -247,23 +247,15 @@ class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * Write to socket
-     *
-     * @param string $content
-     * @param int $length
-     *
-     * @return bool
-     *
-     * @throws
-     *    \RuntimeException
+     * @{inerhitDoc}
      */
-    public function writeToSocket($content, $length = NULL)
+    public function write($content, $length = NULL)
     {
         if (!$this->is(FALSE)) {
             throw new \RuntimeException('Can\'t write to socket. Socket not created.');
         }
 
-        if (is_null($length)) {
+        if ($length === NULL) {
             return fwrite($this->getResource(), $content);
         }
         else {
@@ -272,16 +264,9 @@ class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * Read from socket
-     *
-     * @param int $length
-     *
-     * @return string
-     *
-     * @throws
-     *    \RuntimeException
+     * @{inerhitDoc}
      */
-    public function readFromSocket($length)
+    public function read($length)
     {
         if (!$this->is(FALSE)) {
             throw new \RuntimeException('Can\'t read from socket. Socket not started.');
@@ -291,14 +276,9 @@ class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * Is eof socket
-     *
-     * @return bool
-     *
-     * @throws
-     *    \RuntimeException
+     * @{inerhitDoc}
      */
-    public function isEofSocket()
+    public function isEof()
     {
         if (!$this->is(FALSE)) {
             throw new \RuntimeException('Can\'t read from socket. Socket not started');
@@ -308,9 +288,9 @@ class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * Read all socket
+     * @{inerhitDoc}
      */
-    public function readAllFromSocket()
+    public function readAll()
     {
         return $this->getContents();
     }

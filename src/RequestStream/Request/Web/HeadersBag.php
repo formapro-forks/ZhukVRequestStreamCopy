@@ -11,6 +11,8 @@
 
 namespace RequestStream\Request\Web;
 
+use RequestStream\Request\ParametersBag;
+
 /**
  * Headers collection
  */
@@ -26,7 +28,7 @@ class HeadersBag extends ParametersBag
      */
     public function offsetSet($name, $value)
     {
-        if (is_object($value)) {
+        if (is_object($value) && !$value instanceof CookiesBag) {
             if (!method_exists($value, '__toString')) {
                 throw new \InvalidArgumentException(sprintf(
                     'Can\'t set header "%s". Not found __toString method in object "%s".',
@@ -37,16 +39,31 @@ class HeadersBag extends ParametersBag
             $value = (string) $value;
         }
 
-        if (!is_string($value) && !is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value) && !$value instanceof CookiesBag) {
             throw new \InvalidArgumentException(sprintf(
                 'Header must be a string, "%s" given',
-                gettype($value)
+                is_object($value) ? get_class($value) : gettype($value)
             ));
+        }
+
+        $nameLower = mb_strtolower($name);
+
+        if ($nameLower == 'cookie') {
+            if (!$value instanceof CookiesBag) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Cookies must be CookiesBag, "%s" given.',
+                    is_object($value) ? get_class($value) : gettype($value)
+                ));
+            }
+        }
+
+        if ($nameLower == 'referer' && !$value instanceof Uri) {
+            $value = Uri::parseFromString($value);
         }
 
         $this->_storageReal[$name] = $value;
 
-        return parent::offsetSet(mb_strtolower($name), $value);
+        return parent::offsetSet($nameLower, $value);
     }
 
     /**

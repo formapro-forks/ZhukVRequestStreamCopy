@@ -14,7 +14,8 @@ namespace RequestStream\Request\Web;
 /**
  * Interface for control result
  */
-interface ResultInterface {
+interface ResultInterface
+{
     /**
      * Get result data
      *
@@ -23,14 +24,11 @@ interface ResultInterface {
     public function getData();
 
     /**
-     * Get headers
+     * Get headers bag
      *
-     * @param string $name (Optional)
-     *
-     * @return array|string
-     *    If used $name, return header of name
+     * @return HeadersBag
      */
-    public function getHeaders($name = NULL);
+    public function getHeaders();
 
     /**
      * Get code status (Status server)
@@ -40,40 +38,33 @@ interface ResultInterface {
     public function getCode();
 
     /**
-     * Get response server
+     * Get protocol
      *
      * @return string
      */
-    public function getResponse();
+    public function getProtocol();
 
     /**
-     * Get cookies
+     * Get cookies bag
      *
-     * @param string $name
-     *
-     * @return array
+     * @return CookiesBag
      */
-    public function getCookies($name = NULL);
+    public function getCookies();
 
     /**
-     * Is cookie
+     * Get request time
      *
-     * @param string $name
-     *
-     * @return bool
+     * @return float
      */
-    public function isCookie($name = NULL);
+    public function getRequestTime();
 
     /**
      * Parse page content
      *
      * @param string $content
+     * @param float $useTime
      *
-     * @return array
-     *    - 0 => Headers content
-     *    - 1 => Page content
-     *
-     *    Exception, if not allowed formats
+     * @return ResultInterface
      */
-    public function parsePageContent($content);
+    static public function parseFromContent($content, $useTime = NULL);
 }

@@ -16,7 +16,7 @@ use RequestStream\Stream\Context\Context,
 /**
  * Context test
  */
-class ContextTest extends \PHPUnit_Framework_TestCase
+class StreamContextTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Create a new context
@@ -106,5 +106,4 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($setsHttpOptions[$k], $v);
         }
     }
-
 }

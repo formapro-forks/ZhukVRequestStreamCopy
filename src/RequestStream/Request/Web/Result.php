@@ -27,7 +27,7 @@ class Result implements ResultInterface
     /**
      * @var HeadersBag
      */
-    protected $headers;
+    public $headers;
 
     /**
      * @var integer
@@ -37,29 +37,33 @@ class Result implements ResultInterface
     /**
      * @var string
      */
-    protected $response;
-
-    /**
-     * @var string
-     */
     protected $protocol;
 
     /**
      * @var CookiesBag
      */
-    protected $cookies;
+    public $cookies;
+
+    /**
+     * @var float
+     */
+    public $requestTime;
 
     /**
      * Construct
      */
-    public function __construct()
+    public function __construct($code = 200,  $data = NULL, $protocol = NULL, HeadersBag $headers = NULL, CookiesBag $cookies = NULL, $requestTime = NULL)
     {
-        $this->headers = new HeadersBag;
-        $this->cookies = new CookiesBag;
+        $this->code = $code;
+        $this->data = $data;
+        $this->protocol = $protocol;
+        $this->headers = $headers === NULL ? new HeadersBag : $headers;
+        $this->cookies = $cookies === NULL ? new CookiesBag : $cookies;
+        $this->requestTime = $requestTime;
     }
 
     /**
-     * Get data
+     * @{inerhitDoc}
      */
     public function getData()
     {
@@ -67,17 +71,15 @@ class Result implements ResultInterface
     }
 
     /**
-     * Get headers
-     *
-     * @param string $name
+     * @{inerhitDoc}
      */
-    public function getHeaders($name = NULL)
+    public function getHeaders()
     {
-        return $name ? (isset($this->headers[$name]) ? $this->headers[$name] : NULL) : $this->headers;
+        return $this->headers;
     }
 
     /**
-     * Get code
+     * @{inerhitDoc}
      */
     public function getCode()
     {
@@ -85,39 +87,33 @@ class Result implements ResultInterface
     }
 
     /**
-     * Get response
+     * @{inerhitDoc}
      */
-    public function getResponse()
+    public function getProtocol()
     {
-        return $this->response;
+        return $this->protocol;
     }
 
     /**
-     * Get cookie
-     *
-     * @param string $name
+     * @{inerhitDoc}
      */
     public function getCookies($name = NULL)
     {
-        return $name ? (isset($this->cookies[$name]) ? $this->cookies[$name] : NULL) : $this->cookies;
+        return $this->cookies;
     }
 
     /**
-     * Is cookie
-     *
-     * @param string $name
+     * @{inerhitDoc}
      */
-    public function isCookie($name = NULL)
+    public function getRequestTime()
     {
-        return $name ? isset($this->cookies[$name]) : (bool) $this->cookies;
+        return $this->requestTime;
     }
 
     /**
-     * Parse page content
-     *
-     * @param string $content
+     * @{inerhitDoc}
      */
-    public function parsePageContent($content)
+    static public function parseFromContent($content, $requestTime = NULL)
     {
         $content = explode("\r\n\r\n", $content, 2);
 
@@ -125,43 +121,46 @@ class Result implements ResultInterface
           throw new ResultException('Can\'t parse page content. Not found header or page section.');
         }
 
-        $this->parsePageHeaders($content[0]);
+        $info = self::parsePageHeaders($content[0]);
 
-        $this->data = @$content[1];
-
+        return new static(
+            (int) $info['code'],
+            @$content[1],
+            $info['protocol'],
+            $info['headers'],
+            $info['cookies'],
+            $requestTime
+        );
     }
 
     /**
-     * Parse headers
-     *
-     * @param string $headerContent
+     * @{inerhitDoc}
      */
-    protected function parsePageHeaders($headerContent)
+    protected static function parsePageHeaders($headerContent)
     {
-        $headers = preg_split("/\r\n|\r|\n/", $headerContent);
-
-        @list ($this->protocol, $this->code, $text) = explode(' ', $headers[0]);
-        unset ($headers[0]);
-
-        $responses = array(
-            100 => 'Continue', 101 => 'Switching Protocols',
-            200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content',
-            300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 307 => 'Temporary Redirect',
-            400 => 'Bad Request', 401 => 'Unauthorized', 402 => 'Payment Required', 403 => 'Forbidden', 404 => 'Not Found', 405 => 'Method Not Allowed', 406 => 'Not Acceptable', 407 => 'Proxy Authentication Required', 408 => 'Request Time-out', 409 => 'Conflict', 410 => 'Gone', 411 => 'Length Required', 412 => 'Precondition Failed', 413 => 'Request Entity Too Large', 414 => 'Request-URI Too Large', 415 => 'Unsupported Media Type', 416 => 'Requested range not satisfiable', 417 => 'Expectation Failed',
-            500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Time-out', 505 => 'HTTP Version not supported'
+        $result = array(
+            'protocol' => NULL,
+            'code' => NULL,
+            'headers' => new HeadersBag,
+            'cookies' => new CookiesBag
         );
 
-        $this->response = $responses[$this->code];
+        $headers = preg_split("/\r\n|\r|\n/", $headerContent);
+
+        @list ($result['protocol'], $result['code'], $text) = explode(' ', $headers[0]);
+        unset ($headers[0]);
 
         foreach ($headers as $h) {
-            list ($key, $value) = explode(':', $h, 2);
+           list ($key, $value) = explode(':', $h, 2);
 
             if (strtolower($key) == 'set-cookie') {
-                $this->cookies->add(Cookie::parseFromString($value), NULL);
+                $result['cookies']->add(Cookie::parseFromString($value), NULL);
             }
             else {
-                $this->headers[trim($key)] = trim($value);
+                $result['headers']->add(trim($key), trim($value, '" '));
             }
         }
+
+        return $result;
     }
 }

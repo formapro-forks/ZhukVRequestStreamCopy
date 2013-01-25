@@ -84,11 +84,11 @@ class Uri
         }
 
         if (!$parseUri = @parse_url($url)) {
-            throw new \InvalidArgumentException(sprintf('Can\'t parse uri "%s". Please check uri!', $uri));
+            throw new \InvalidArgumentException(sprintf('Can\'t parse uri "%s". Please check uri!', $url));
         }
 
         if (strpos($parseUri['host'], '.') === FALSE) {
-            throw new \InvalidArgumentException(sprintf('Can\'t parse uri "%s". Undefined host.', $uri));
+            throw new \InvalidArgumentException(sprintf('Can\'t parse uri "%s". Undefined host.', $url));
         }
 
         if (isset($parseUri['query'])) {
@@ -117,7 +117,7 @@ class Uri
             $args[] = array('user' => $parseUri['user'], 'password' => @$parseUri['pass']);
         }
 
-        $refClass = new \ReflectionClass(__CLASS__);
+        $refClass = new \ReflectionClass(get_called_class());
         return $refClass->newInstanceArgs($args);
     }
 
@@ -196,13 +196,23 @@ class Uri
      */
     public function __toString()
     {
+        return $this->getDomain() .
+            $this->path .
+            ($this->query ? '?' . implode('&', $this->query) : '') .
+            ($this->fragment ? '#' . $this->fragment : '');
+    }
+
+    /**
+     * Get domain with shceme
+     *
+     * @return string
+     */
+    public function getDomain()
+    {
         return ($this->secure ? 'https' : 'http') .
             '://' .
             ($this->userLogin['user'] ? $this->userLogin['user'] . ':' . $this->userLogin['password'] . '@' : '') .
             $this->host .
-            ($this->port ? ':' . $this->port : '') .
-            $this->path .
-            ($this->query ? '?' . implode('&', $this->query) : '') .
-            ($this->fragment ? '#' . $this->fragment : '');
+            ($this->port ? ':' . $this->port : '');
     }
 }

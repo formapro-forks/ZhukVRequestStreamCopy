@@ -169,11 +169,11 @@ class Cookie
         return new static(
             $name,
             $value,
-            new \DateTime($expires),
+            $expires ? new \DateTime($expires) : NULL,
             $path,
             $domain,
             $secure,
-            $httpOnly
+            $httpOnly === NULL ? TRUE : $httpOnly
         );
     }
 

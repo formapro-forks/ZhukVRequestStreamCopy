@@ -11,8 +11,10 @@
 
 namespace RequestStream\Request\Web;
 
+use RequestStream\Request\ParametersBag;
+
 /**
- * Headers collection
+ * Cookies collection
  */
 class CookiesBag extends ParametersBag
 {
@@ -30,10 +32,16 @@ class CookiesBag extends ParametersBag
             $value = $name;
             $name = $name->getName();
         }
+        else if ($value instanceof Cookie) {
+            $name = $value->getName();
+        }
+        else {
+            $value = new Cookie($name, $value);
+        }
 
         $this->_storageReal[$name] = $value;
 
-        return parent::offsetSet(mb_strtolower($name), $value);
+        return parent::offsetSet($name, $value);
     }
 
     /**
@@ -66,6 +74,12 @@ class CookiesBag extends ParametersBag
      */
     public function __toString()
     {
-        return implode(';', $this->all());
+        $cookies = array();
+
+        foreach ($this->_storageReal as $cookie) {
+            $cookies[] = (string) $cookie;
+        }
+
+        return implode('; ', $cookies);
     }
 }

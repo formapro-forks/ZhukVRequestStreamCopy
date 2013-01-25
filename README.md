@@ -1,2 +1,2 @@
-RequestStream (PHP > 5.3)
-=========================
+RequestStream
+=============

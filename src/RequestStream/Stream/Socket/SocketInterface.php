@@ -123,30 +123,27 @@ interface SocketInterface
      *
      * @param string $content
      * @param int $length
-     *
-     * @return bool
-     *    Status write to socket
      */
-    public function writeToSocket($content, $length = NULL);
+    public function write($content, $length = NULL);
 
     /**
      * Read from socket
      *
      * @param int $length
      */
-    public function readFromSocket($length);
+    public function read($length);
 
     /**
      * Is eof of reading socket
      *
      * @return bool
      */
-    public function isEofSocket();
+    public function isEof();
 
     /**
      * Read all content from socket
      *
      * @return string
      */
-    public function readAllFromSocket();
+    public function readAll();
 }

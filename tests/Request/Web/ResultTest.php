@@ -9,6 +9,8 @@
  * file that was distributed with this source code
  */
 
+namespace RequestStream\Request\Web;
+
 use RequestStream\Request\Web\Result,
     RequestStream\Request\Web\ResultInterface,
     RequestStream\Request\Web\HeadersBag,
@@ -18,7 +20,7 @@ use RequestStream\Request\Web\Result,
 /**
  * Result tests
  */
-class RequestWebResultTest extends \PHPUnit_Framework_TestCase
+class ResultTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Default test

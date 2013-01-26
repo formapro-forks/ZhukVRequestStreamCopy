@@ -9,6 +9,8 @@
  * file that was distributed with this source code
  */
 
+namespace RequestStream\Request\Web;
+
 use RequestStream\Request\Web\HeadersBag,
     RequestStream\Request\Web\CookiesBag,
     RequestStream\Request\ParametersBagInterface,
@@ -17,7 +19,7 @@ use RequestStream\Request\Web\HeadersBag,
 /**
  * Headers bag test
  */
-class HeadersBagRequestTest extends \PHPUnit_Framework_TestCase
+class HeadersBagTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Headers bag test

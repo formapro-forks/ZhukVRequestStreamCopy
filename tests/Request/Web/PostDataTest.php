@@ -9,15 +9,17 @@
  * file that was distributed with this source code
  */
 
-use RequestStream\Request\Web\PostData;
+namespace RequestStream\Request\Web;
+
+use RequestStream\Request\ParametersBagInterface;
 
 /**
- * Cookie tests
+ * PostData and PostDataBag tests
  */
-class PostDataRequestTest extends \PHPUnit_Framework_TestCase
+class PostDataTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Base test cookie
+     * Base test post data
      */
     public function testPostData()
     {
@@ -28,5 +30,33 @@ class PostDataRequestTest extends \PHPUnit_Framework_TestCase
         $stringPostData = 'Content-Disposition: form-data; name="' . $postData->getName() . '"' . "\r\n\r\n" . $postData->getValue();
 
         $this->assertEquals((string) $postData, $stringPostData);
+    }
+
+    /**
+     * Base test cookie
+     */
+    public function testPostDataBag()
+    {
+        $bag = new PostDataBag;
+        $this->assertTrue($bag instanceof ParametersBagInterface);
+
+        $bag['k1'] = 'v1';
+
+        $this->assertEquals(count($bag), 1);
+
+        $this->assertTrue($bag['k1'] instanceof PostData);
+
+        $this->assertEquals($bag['k1']->getName(), 'k1');
+        $this->assertEquals($bag['k1']->getValue(), 'v1');
+
+        $refProperty = new \ReflectionProperty($bag, 'boundary');
+        $refProperty->setAccessible(TRUE);
+        $refProperty->setValue($bag, 'qw123');
+
+        $postDataString = "\r\n--qw123\n" .
+            'Content-Disposition: form-data; name="k1"' . "\r\n\r\n" . "v1" . "\r\n" .
+            '--qw123--';
+
+        $this->assertEquals((string) $bag, $postDataString);
     }
 }

@@ -9,12 +9,14 @@
  * file that was distributed with this source code
  */
 
+namespace RequestStream\Request\Web;
+
 use RequestStream\Request\Web\Uri;
 
 /**
  * URI tests
  */
-class RequestWebUriTest extends \PHPUnit_Framework_TestCase
+class UriTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Default test uri

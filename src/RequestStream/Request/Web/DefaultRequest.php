@@ -194,9 +194,13 @@ class DefaultRequest implements RequestInterface
      */
     public function __toString()
     {
+        if (!$this->uri) {
+            throw new \RuntimeException('Undefined target request URI.');
+        }
+        
         $this->prepare();
 
-        return $this->method . ' ' . ((string) $this->uri) . ' HTTP/' . $this->httpVersion .  "\r\n" .
+        return $this->method . ' ' . ($this->uri->getPath()) . ' HTTP/' . $this->httpVersion .  "\r\n" .
             'Host: ' . $this->uri->getHost() . "\r\n".
             ((string) $this->headers) .
             "\r\n\r\n";

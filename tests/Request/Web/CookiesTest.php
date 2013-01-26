@@ -9,12 +9,16 @@
  * file that was distributed with this source code
  */
 
-use RequestStream\Request\Web\Cookie;
+namespace RequestStream\Request\Web;
+
+use RequestStream\Request\Web\CookiesBag,
+    RequestStream\Request\Web\Cookie,
+    RequestStream\Request\ParametersBagInterface;
 
 /**
- * Cookie tests
+ * Cookie, CookiesBag, CookieFilter tests
  */
-class CookiesRequestTest extends \PHPUnit_Framework_TestCase
+class CookiesTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Base test cookie
@@ -68,5 +72,37 @@ class CookiesRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($cookie->getDomain(), 'example.com');
 
         $this->assertEquals((string) $cookie, 'name2=value2');
+    }
+
+    /**
+     * Cookies bag test
+     */
+    public function testCookiesBag()
+    {
+        $bag = new CookiesBag;
+
+        $bag['c1'] = 'v1';
+
+        $this->assertEquals(count($bag), 1);
+        $this->assertTrue($bag['c1'] instanceof Cookie);
+
+        $bag['c2'] = 'v2';
+        $this->assertEquals($bag['c2']->getValue(), 'v2');
+        $this->assertEquals($bag['c2']->getName(), 'c2');
+
+        $cookie = new Cookie('c3', 'v3');
+        $bag[] = $cookie;
+        $this->assertEquals($bag['c3']->getName(), 'c3');
+        $this->assertEquals($bag['c3']->getValue(), 'v3');
+
+        $this->assertEquals(str_replace(' ', '', (string) $bag), 'c1=v1;c2=v2;c3=v3');
+    }
+
+    /**
+     * Cookie filter test
+     */
+    public function testCookieFilter()
+    {
+        // TODO: Create cookie filter tests
     }
 }

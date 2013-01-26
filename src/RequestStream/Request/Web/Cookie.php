@@ -153,27 +153,15 @@ class Cookie
     static public function parseFromString($cookieStr)
     {
         // Get base values from cookie string
-        @list ($value, $expires, $path, $domain, $secure, $httpOnly) = explode(';', $cookieStr);
+        @list ($value, $otherData) = explode(';', $cookieStr, 2);
 
-        // Get name, value, path etc... from cookie item
-        @list ($name, $value) = explode('=', trim($value));
-        @list ($null, $expires) = explode('=', trim($expires));
-        @list ($null, $path) = explode('=', trim($path));
-        @list ($null, $domain) = explode('=', trim($domain));
+        // Get name and value
+        list ($name, $value) = explode('=', $value);
 
-        // If not added expires to set cookie
-        if ($expires == '/') {
-            $expires = NULL; $path = '/';
-        }
-
+        // TODO: Control another options in cookie
         return new static(
-            $name,
-            $value,
-            $expires ? new \DateTime($expires) : NULL,
-            $path,
-            $domain,
-            $secure,
-            $httpOnly === NULL ? TRUE : $httpOnly
+            trim($name),
+            trim($value)
         );
     }
 

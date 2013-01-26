@@ -197,10 +197,10 @@ class DefaultRequest implements RequestInterface
         if (!$this->uri) {
             throw new \RuntimeException('Undefined target request URI.');
         }
-        
+
         $this->prepare();
 
-        return $this->method . ' ' . ($this->uri->getPath()) . ' HTTP/' . $this->httpVersion .  "\r\n" .
+        return $this->method . ' ' . ($this->uri->getPath() . ($this->uri->getQuery() ? '?' . implode('&', $this->uri->getQuery()) : '')) . ' HTTP/' . $this->httpVersion .  "\r\n" .
             'Host: ' . $this->uri->getHost() . "\r\n".
             ((string) $this->headers) .
             "\r\n\r\n";

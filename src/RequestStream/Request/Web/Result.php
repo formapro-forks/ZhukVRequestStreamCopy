@@ -47,7 +47,7 @@ class Result implements ResultInterface
     /**
      * @var float
      */
-    public $requestTime;
+    protected $requestTime;
 
     /**
      * Construct

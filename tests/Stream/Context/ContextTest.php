@@ -9,8 +9,8 @@
  * file that was distributed with this source code
  */
 
-use RequestStream\Stream\Context\Context,
-    RequestStream\Stream\Context\ContextInterface,
+use RequestStream\Stream\Context,
+    RequestStream\Stream\ContextInterface,
     RequestStream\Stream\StreamInterface;
 
 /**

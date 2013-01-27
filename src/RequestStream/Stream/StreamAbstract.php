@@ -11,13 +11,14 @@
 
 namespace RequestStream\Stream;
 
-
 /**
  * Abstract core for use stream
  */
 abstract class StreamAbstract implements StreamInterface
 {
-    // Resource stram
+    /**
+     * @var resource
+     */
     protected $resource = NULL;
 
     /**
@@ -63,96 +64,12 @@ abstract class StreamAbstract implements StreamInterface
     /**
      * @{inerhitDoc}
      */
-    public function getContents($maxLength = -1, $offset = -1)
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t get content. Stream not created.');
-        }
-
-        return stream_get_contents($this->getResource(), $maxLength, $offset);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function getLine($length, $ending = "\n")
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t get line. Stream not created.');
-        }
-
-        return stream_get_line($this->getResource(), $length, $ending);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function setBlocking($mode)
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t set blocking of mode stream. Stream not created.');
-        }
-
-        return stream_set_blocking($this->getResource(), $mode);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function setReadBuffer($buffer)
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t set read buffer. Stream not created.');
-        }
-
-        return stream_set_read_buffer($this->getResource(), $buffer);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function setWriteBuffer($buffer)
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t set write buffer. Stream not created.');
-        }
-
-        return stream_set_write_buffer($this->getResource(), $buffer);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function setTimeout($second, $milisecond = 0)
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t set timetout. Stream not created.');
-        }
-
-        return stream_set_timeout($this->getResource(), $second, $milisecond);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function getMetaData()
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t get meta data. Stream not created.');
-        }
-
-        return stream_get_meta_data($this->getResource());
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
     public function is($autoload = FALSE)
     {
-        if (!$autoload) { return (bool) $this->resource; }
+        if (!$autoload) {
+            return (bool) $this->resource;
+        }
 
-        // If started stream throw new exception
-        // Must be use try operand
         try{
             $this->create();
         }
@@ -168,10 +85,15 @@ abstract class StreamAbstract implements StreamInterface
      */
     public function getResource()
     {
-        if (is_null($this->resource)) {
+        if ($this->resource === NULL) {
             $this->create();
         }
 
         return $this->resource;
     }
+
+    /**
+     * @{inerhitDoc}
+     */
+    abstract function create();
 }

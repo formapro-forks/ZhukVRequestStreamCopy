@@ -13,35 +13,37 @@
 namespace RequestStream\Stream\Socket;
 
 use RequestStream\Stream\Context\ContextInterface,
-    RequestStream\Stream\StreamAbstract,
-    RequestStream\Stream\Exception\SocketErrorException;
+    RequestStream\Stream\StreamAbstract;
 
 /**
  * Abstract core for control stream socket
  */
-class Socket extends StreamAbstract implements SocketInterface
+abstract class Socket extends StreamAbstract implements SocketInterface
 {
-    // Context
+    /**
+     * @var ContextInterface
+     */
     protected $context = NULL;
 
-    // Transport
+    /**
+     * @var string
+     */
     protected $transport = NULL;
 
-    // Target
+    /**
+     * @var string
+     */
     protected $target = NULL;
 
-    // Port
+    /**
+     * @var integer
+     */
     protected $port = NULL;
 
-    // Flag
-    protected $flags = STREAM_CLIENT_CONNECT;
-
     /**
-     * Construct
+     * @var resource
      */
-    public function __construct()
-    {
-    }
+    protected $resource;
 
     /**
      * Set context
@@ -51,26 +53,24 @@ class Socket extends StreamAbstract implements SocketInterface
     public function setContext(ContextInterface $context)
     {
         $this->context = $context;
+
         return $this;
     }
 
     /**
-     * Get context
-     *
-     * @param bool [$originalResource]
-     *
-     * @return resource or ContextInterface
+     * @{inerhitDoc}
      */
     public function getContext($originalResource = FALSE)
     {
-        if (!$this->context) { return FALSE; }
+        if (!$this->context) {
+            return FALSE;
+        }
+
         return $originalResource ? ($this->context ? $this->context->getResource() : FALSE) : $this->context;
     }
 
     /**
-     * Set transport
-     *
-     * @param string $transport
+     * @{inerhitDoc}
      */
     public function setTransport($transport)
     {
@@ -80,18 +80,16 @@ class Socket extends StreamAbstract implements SocketInterface
 
         // Validate transport
         if (!self::isTransport($transport)) {
-            throw new \InvalidArgumentException(sprintf('Undefined transport "%s". Allowed transports: "%s"', $transport, implode('", "', stream_get_transports())));
+            throw new \InvalidArgumentException(sprintf('Undefined transport "%s". Allowed transports: "%s"', $transport, implode('", "', self::getTransports())));
         }
 
         $this->transport = $transport;
+
         return $this;
     }
 
     /**
-     * Get transport
-     *
-     * @return string
-     *    Used transport
+     * @{inerhitDoc}
      */
     public function getTransport()
     {
@@ -99,20 +97,17 @@ class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * Set target for connect of socket
-     *
-     * @param string $target
+     * @{inerhitDoc}
      */
     public function setTarget($target)
     {
         $this->target = $target;
+
         return $this;
     }
 
     /**
-     * Get target
-     *
-     * @param string $target
+     * @{inerhitDoc}
      */
     public function getTarget()
     {
@@ -127,55 +122,29 @@ class Socket extends StreamAbstract implements SocketInterface
     public function setPort($port)
     {
         // Validate port
-        if (!(is_numeric($port) && strpos($port, '.') === FALSE)) {
-            throw new \InvalidArgumentException(sprintf('Port must be integer value [Port:%s]', $port));
+        if (!is_numeric($port) || strpos($port, '.') !== FALSE) {
+            throw new \InvalidArgumentException(sprintf('Port must be integer value, "%s" given.', $port));
         }
 
         if ($port <= 0) {
-            throw new \InvalidArgumentException(sprintf('Port must be large zero [Port:%s]', $port));
+            throw new \InvalidArgumentException(sprintf('Port must be large zero, "%d" given.', $port));
         }
 
         $this->port = $port;
+
         return $this;
     }
 
     /**
-     * Get port
-     *
-     * @return integer
+     * @{inerhitDoc}
      */
     public function getPort()
     {
-        return $this;
+        return $this->port;
     }
 
     /**
-     * Set flags
-     *
-     * @param int $flags
-     */
-    public function setFlags($flags)
-    {
-        if (!in_array($flags, array(STREAM_CLIENT_CONNECT, STREAM_CLIENT_ASYNC_CONNECT, STREAM_CLIENT_PERSISTENT))) {
-            throw new \InvalidArgumentException('Undefined flags in own system. Please check flags.');
-        }
-
-        $this->flags = $flags;
-        return $this;
-    }
-
-    /**
-     * Get flags
-     *
-     * @return int
-     */
-    public function getFlags()
-    {
-        return $this->flags;
-    }
-
-    /**
-     * Get remove socket
+     * @{inerhitDoc}
      */
     public function getRemoteSocket()
     {
@@ -194,15 +163,8 @@ class Socket extends StreamAbstract implements SocketInterface
         return $this->transport . '://' . $this->target . ($this->port ? ':' . $this->port : '');
     }
 
-
     /**
-     * Is socet started
-     *
-     * @param bool $autoload
-     *    Autoload socket
-     *
-     * @return bool
-     *    Status started socket
+     * @{inerhitDoc}
      */
     public function is($autoload = FALSE)
     {
@@ -219,79 +181,35 @@ class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * Create socket client
+     * @{inerhitDoc}
      */
-    public function create()
+    public function close()
     {
-        if ($this->is(FALSE)) {
-            return $this->resource;
+        if (!$this->resource) {
+            throw new \LogicException('Can\'t close socket connection. Connection not created.');
         }
 
-        if ($this->context) {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flags, $this->getContext(TRUE));
-        }
-        else {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flags);
-        }
+        // Shutdown socket connection
+        $this->shutdown();
 
-        if (!$resource) {
-            if (!$errorCode && !$errorStr) {
-                throw new SocketErrorException('Socket not create. Technical error in system.', 0);
-            }
-            else {
-                throw new SocketErrorException($errorStr, $errorCode);
-            }
-        }
+        // Destruct
+        unset ($this->resource);
+        $this->resource = NULL;
 
-        $this->resource = $resource;
+        return $this;
     }
 
     /**
      * @{inerhitDoc}
      */
-    public function write($content, $length = NULL)
+    public function shutdown($mode = STREAM_SHUT_RDWR)
     {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t write to socket. Socket not created.');
+        if (!$this->resource) {
+            throw new \LogicException('Can\'t shutdown socket connection. Connection not created.');
         }
+        
+        stream_socket_shutdown($this->resource, $mode);
 
-        if ($length === NULL) {
-            return fwrite($this->getResource(), $content);
-        }
-        else {
-            return fwrite($this->getResource(), $content, $length);
-        }
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function read($length)
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t read from socket. Socket not started.');
-        }
-
-        return fread($this->getResource(), $length);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function isEof()
-    {
-        if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t read from socket. Socket not started');
-        }
-
-        return eof($this->getResource());
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function readAll()
-    {
-        return $this->getContents();
+        return $this;
     }
 }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code
  */
 
-namespace RequestStream\Stream\Context;
+namespace RequestStream\Stream;
 
 use RequestStream\Stream\StreamAbstract;
 

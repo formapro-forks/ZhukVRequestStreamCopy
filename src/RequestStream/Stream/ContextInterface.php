@@ -9,13 +9,14 @@
  * file that was distributed with this source code
  */
 
-namespace RequestStream\Stream\Context;
+namespace RequestStream\Stream;
 
 
 /**
  * Interface for control context
  */
-interface ContextInterface {
+interface ContextInterface
+{
     /**
      * Get default options for content
      *

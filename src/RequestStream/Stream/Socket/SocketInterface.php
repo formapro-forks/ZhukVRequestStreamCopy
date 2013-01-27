@@ -39,9 +39,6 @@ interface SocketInterface
      * Set transport for socket
      *
      * @param string $transport
-     *
-     * @return this object
-     *    Exception, if transport not allowed in system
      */
     public function setTransport($transport);
 
@@ -55,9 +52,7 @@ interface SocketInterface
     /**
      * Set target
      *
-     * @param string $target      Target uri for open socket
-     *
-     * @return this object
+     * @param string $target
      */
     public function setTarget($target);
 
@@ -72,9 +67,6 @@ interface SocketInterface
      * Set posrt for open socket
      *
      * @param int $port
-     *
-     * @return this object
-     *    Exception, if port not valid
      */
     public function setPort($port);
 
@@ -89,9 +81,6 @@ interface SocketInterface
      * Set flag for open socket
      *
      * @param int $flags
-     *
-     * @return this object
-     *    Exception, if flag not allowed
      */
     public function setFlags($flags);
 
@@ -106,44 +95,39 @@ interface SocketInterface
      * Get full uri for open socket
      *
      * @return string
-     *    Exception, if port or target or transport is undefined
      */
     public function getRemoteSocket();
 
     /**
-     * Create socket connect
-     *
-     * @return null
-     *    Exception, if socket not opened or is error
+     * Close socket connection
      */
-    public function create();
+    public function close();
 
     /**
-     * Write to socket
+     * Shutdown socket connection
      *
-     * @param string $content
-     * @param int $length
+     * @see: http://php.net/manual/en/function.stream-socket-shutdown.php
+     *
+     * @param integer $mode
      */
-    public function write($content, $length = NULL);
+    public function shutdown($mode = STREAM_SHUT_RDWR);
 
     /**
-     * Read from socket
+     * Blocking stream
      *
-     * @param int $length
-     */
-    public function read($length);
-
-    /**
-     * Is eof of reading socket
+     * @param int $mode
      *
      * @return bool
      */
-    public function isEof();
+    public function setBlocking($mode);
 
     /**
-     * Read all content from socket
+     * Set timeout for stream
      *
-     * @return string
+     * @param int $second
+     * @param int $milisecond
+     *
+     * @return bool
      */
-    public function readAll();
+    public function setTimeout($second, $milisecond = 0);
 }

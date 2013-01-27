@@ -13,8 +13,8 @@
 namespace RequestStream\Request\Web\Socket;
 
 use RequestStream\Request\Web\WebAbstract,
-    RequestStream\Stream\Socket\Socket,
-    RequestStream\Stream\Context\Context,
+    RequestStream\Stream\Socket\SocketClient,
+    RequestStream\Stream\Context,
     RequestStream\Request\Web\Result;
 
 /**
@@ -73,7 +73,7 @@ class Request extends WebAbstract implements RequestInterface
      */
     protected function createRequest()
     {
-        $this->socket = new Socket;
+        $this->socket = new SocketClient;
         $requestUri = $this->request->getUri();
 
         // Init socket by scheme
@@ -114,7 +114,7 @@ class Request extends WebAbstract implements RequestInterface
         $useTime = microtime(TRUE);
 
         // Generate result
-        return Result::parseFromContent($this->socket->readAll(), microtime(TRUE) - $useTime);
+        return Result::parseFromContent($this->socket->getContents(), microtime(TRUE) - $useTime);
     }
 
     /**

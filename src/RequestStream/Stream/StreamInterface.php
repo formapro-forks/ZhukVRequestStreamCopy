@@ -58,54 +58,6 @@ interface StreamInterface
     public static function resolveIncludePath($path);
 
     /**
-     * Get all contents from stream
-     * @see http://www.php.net/manual/en/function.stream-get-contents.php
-     *
-     * @param int $maxLength
-     * @param int $offset
-     *
-     * @return string
-     */
-    public function getContents($maxLength = -1, $offset = -1);
-
-    /**
-     * Blocking stream
-     *
-     * @param int $mode
-     *
-     * @return bool
-     */
-    public function setBlocking($mode);
-
-    /**
-     * Set read buffer for stream
-     *
-     * @param int $buffer
-     *
-     * @return bool
-     */
-    public function setReadBuffer($buffer);
-
-    /**
-     * Set write buffer for stram
-     *
-     * @param int $buffer
-     *
-     * @return bool
-     */
-    public function setWriteBuffer($buffer);
-
-    /**
-     * Set timeout for stream
-     *
-     * @param int $second
-     * @param int $milisecond
-     *
-     * @return bool
-     */
-    public function setTimeout($second, $milisecond = 0);
-
-    /**
      * Is created stream
      *
      * @param bool $autoload      Is auto create stream

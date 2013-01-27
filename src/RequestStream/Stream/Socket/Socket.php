@@ -12,7 +12,7 @@
 
 namespace RequestStream\Stream\Socket;
 
-use RequestStream\Stream\Context\ContextInterface,
+use RequestStream\Stream\ContextInterface,
     RequestStream\Stream\StreamAbstract;
 
 /**
@@ -207,7 +207,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
         if (!$this->resource) {
             throw new \LogicException('Can\'t shutdown socket connection. Connection not created.');
         }
-        
+
         stream_socket_shutdown($this->resource, $mode);
 
         return $this;

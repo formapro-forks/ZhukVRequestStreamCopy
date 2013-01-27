@@ -12,7 +12,7 @@
 
 namespace RequestStream\Stream\Socket;
 
-use RequestStream\Stream\Context\ContextInterface;
+use RequestStream\Stream\ContextInterface;
 
 /**
  * Interface for control socket client

@@ -114,7 +114,7 @@ class Request extends WebAbstract implements RequestInterface
         $useTime = microtime(TRUE);
 
         // Generate result
-        return Result::parseFromContent($this->socket->getContents(), microtime(TRUE) - $useTime);
+        return Result::parseFromContent($this->socket->read(), microtime(TRUE) - $useTime);
     }
 
     /**

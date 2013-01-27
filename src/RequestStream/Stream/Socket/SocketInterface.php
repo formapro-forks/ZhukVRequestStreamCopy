@@ -130,4 +130,44 @@ interface SocketInterface
      * @return bool
      */
     public function setTimeout($second, $milisecond = 0);
+
+    /**
+     * Select read stream
+     *
+     * @param integer $second
+     * @param integer $usecond
+     */
+    public function selectRead($second = 1, $usecond = 0);
+
+    /**
+     * Select write stream
+     *
+     * @param integer $second
+     * @param integer $usecond
+     */
+    public function selectWrite($second = 1, $usecond = 0);
+
+    /**
+     * Select except stream
+     *
+     * @param integer $second
+     * @param integer $usecond
+     */
+    public function selectExcept($second = 1, $usecond = 0);
+
+    /**
+     * Write to socket
+     *
+     * @param string $content
+     * @param int $length
+     */
+    public function write($content, $length = NULL);
+
+    /**
+     * Read from socket
+     *
+     * @param int $maxLength
+     * @param int $offset
+     */
+    public function read($maxLength = -1, $offset = -1);
 }

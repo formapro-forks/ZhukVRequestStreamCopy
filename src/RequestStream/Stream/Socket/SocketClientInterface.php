@@ -17,37 +17,4 @@ namespace RequestStream\Stream\Socket;
  */
 interface SocketClientInterface
 {
-    /**
-     * Write to socket
-     *
-     * @param string $content
-     * @param int $length
-     */
-    public function write($content, $length = NULL);
-
-    /**
-     * Read from socket
-     *
-     * @param int $length
-     */
-    public function read($length);
-
-    /**
-     * Is eof of reading socket
-     *
-     * @return bool
-     */
-    public function isEof();
-
-    /**
-     * Get all contents from stream
-     * @see http://www.php.net/manual/en/function.stream-get-contents.php
-     *
-     * @param int $maxLength
-     * @param int $offset
-     *
-     * @return string
-     */
-    public function getContents($maxLength = -1, $offset = -1);
-
 }

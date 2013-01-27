@@ -58,9 +58,22 @@ interface StreamInterface
     public static function resolveIncludePath($path);
 
     /**
+     * Select status streams
+     *
+     * @see http://php.net/manual/en/function.stream-select.php
+     *
+     * @param array &$read
+     * @param array &$write
+     * @param array &$except
+     * @param integer $seconds
+     * @param integer $useconds
+     */
+    public static function select(array &$read = NULL, array &$write = NULL, array &$except = NULL, $sec = 1, $usec = 0);
+
+    /**
      * Is created stream
      *
-     * @param bool $autoload      Is auto create stream
+     * @param bool $autoload
      *
      * @return bool
      */

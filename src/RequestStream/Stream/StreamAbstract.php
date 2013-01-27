@@ -64,6 +64,18 @@ abstract class StreamAbstract implements StreamInterface
     /**
      * @{inerhitDoc}
      */
+    public static function select(array &$read = NULL, array &$write = NULL, array &$except = NULL, $sec = 1, $usec = 0)
+    {
+        if (!$read && !$write && !$except) {
+            throw new \InvalidArgumentException('Not found streams for select.');
+        }
+
+        return stream_select($read, $write, $except, $sec, $usec);
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
     public function is($autoload = FALSE)
     {
         if (!$autoload) {

@@ -212,4 +212,87 @@ abstract class Socket extends StreamAbstract implements SocketInterface
 
         return $this;
     }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function setBlocking($mode)
+    {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t set blocking of mode stream. Stream not created.');
+        }
+
+        return stream_set_blocking($this->getResource(), $mode);
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function setTimeout($second, $milisecond = 0)
+    {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t set timetout. Stream not created.');
+        }
+
+        return stream_set_timeout($this->getResource(), $second, $milisecond);
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function selectRead($seconds = 1, $useconds = 0)
+    {
+        $selectRead = array($this->resource);
+        $null = NULL;
+        return self::select($selectRead, $null, $null, $seconds, $useconds);
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function selectWrite($second = 1, $usecond = 0)
+    {
+        $selectWrite = array($this->resource);
+        $null = NULL;
+        return self::select($null, $selectWrite, $null, $second, $usecond);
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function selectExcept($second = 1, $usecond = 0)
+    {
+        $selectExcept = array($this->resource);
+        $null = NULL;
+        return self::select($null, $null, $selectExcept, $second, $usecond);
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function write($content, $length = NULL)
+    {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t write to socket. Socket not created.');
+        }
+
+        if ($length === NULL) {
+            return fwrite($this->getResource(), $content);
+        }
+        else {
+            return fwrite($this->getResource(), $content, $length);
+        }
+    }
+
+    /**
+     * @{inerhitDoc}
+     */
+    public function read($length = -1, $offset = -1)
+    {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t read from socket. Socket not started.');
+        }
+
+        return stream_get_contents($this->resource, $length, $offset);
+    }
 }

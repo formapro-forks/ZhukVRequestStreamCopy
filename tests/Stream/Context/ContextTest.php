@@ -9,9 +9,7 @@
  * file that was distributed with this source code
  */
 
-use RequestStream\Stream\Context,
-    RequestStream\Stream\ContextInterface,
-    RequestStream\Stream\StreamInterface;
+namespace RequestStream\Stream;
 
 /**
  * Context test

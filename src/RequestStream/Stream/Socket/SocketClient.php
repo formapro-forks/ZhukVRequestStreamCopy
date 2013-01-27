@@ -26,18 +26,18 @@ class SocketClient extends Socket
     /**
      * @var integer
      */
-    protected $flags = STREAM_CLIENT_CONNECT;
+    protected $flag = STREAM_CLIENT_CONNECT;
 
     /**
      * @{inerhitDoc}
      */
-    public function setFlags($flags)
+    public function setFlag($flag)
     {
-        if (!in_array($flags, array(STREAM_CLIENT_CONNECT, STREAM_CLIENT_ASYNC_CONNECT, STREAM_CLIENT_PERSISTENT))) {
+        if (!in_array($flag, array(STREAM_CLIENT_CONNECT, STREAM_CLIENT_ASYNC_CONNECT, STREAM_CLIENT_PERSISTENT))) {
             throw new \InvalidArgumentException('Undefined flags in own system. Please check flags.');
         }
 
-        $this->flags = $flags;
+        $this->flag = $flag;
 
         return $this;
     }
@@ -45,9 +45,9 @@ class SocketClient extends Socket
     /**
      * @{inerhitDoc}
      */
-    public function getFlags()
+    public function getFlag()
     {
-        return $this->flags;
+        return $this->flag;
     }
 
         /**
@@ -60,10 +60,10 @@ class SocketClient extends Socket
         }
 
         if ($this->context) {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flags, $this->getContext(TRUE));
+            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag, $this->getContext(TRUE));
         }
         else {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flags);
+            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag);
         }
 
         if (!$resource) {

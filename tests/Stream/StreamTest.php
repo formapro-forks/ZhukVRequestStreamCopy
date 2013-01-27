@@ -9,12 +9,13 @@
  * file that was distributed with this source code
  */
 
-use RequestStream\Stream\StreamAbstract;
+namespace RequestStream\Stream;
+
 
 /**
  * Abstract core tests
  */
-class StreamTest extends \PHPUnit_Framework_TestCase
+class StreamAbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Default stream tests
@@ -39,6 +40,8 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         foreach ($allowedTransports as $at) {
             $this->assertTrue(StreamAbstract::isTransport($at));
         }
+
+        $this->assertFalse(StreamAbstract::isTransport('undefined_transport'));
     }
 
     /**
@@ -54,5 +57,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         foreach ($allowedWrappers as $aw) {
             $this->assertTrue(StreamAbstract::isWrapper($aw));
         }
+
+        $this->assertFalse(StreamAbstract::isWrapper('undefined_wrapper'));
     }
 }

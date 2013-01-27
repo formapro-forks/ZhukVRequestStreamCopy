@@ -219,7 +219,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     public function setBlocking($mode)
     {
         if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t set blocking of mode stream. Stream not created.');
+            throw new \RuntimeException('Can\'t set blocking of mode stream. Socket not created.');
         }
 
         return stream_set_blocking($this->getResource(), $mode);
@@ -231,7 +231,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     public function setTimeout($second, $milisecond = 0)
     {
         if (!$this->is(FALSE)) {
-            throw new \RuntimeException('Can\'t set timetout. Stream not created.');
+            throw new \RuntimeException('Can\'t set timetout. Socket not created.');
         }
 
         return stream_set_timeout($this->getResource(), $second, $milisecond);
@@ -242,9 +242,13 @@ abstract class Socket extends StreamAbstract implements SocketInterface
      */
     public function selectRead($seconds = 1, $useconds = 0)
     {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t get read select. Socket not created.');
+        }
+
         $selectRead = array($this->resource);
         $null = NULL;
-        return self::select($selectRead, $null, $null, $seconds, $useconds);
+        return (bool) self::select($selectRead, $null, $null, $seconds, $useconds);
     }
 
     /**
@@ -252,9 +256,13 @@ abstract class Socket extends StreamAbstract implements SocketInterface
      */
     public function selectWrite($second = 1, $usecond = 0)
     {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t get write select. Socket not created.');
+        }
+
         $selectWrite = array($this->resource);
         $null = NULL;
-        return self::select($null, $selectWrite, $null, $second, $usecond);
+        return (bool) self::select($null, $selectWrite, $null, $second, $usecond);
     }
 
     /**
@@ -262,9 +270,13 @@ abstract class Socket extends StreamAbstract implements SocketInterface
      */
     public function selectExcept($second = 1, $usecond = 0)
     {
+        if (!$this->is(FALSE)) {
+            throw new \RuntimeException('Can\'t get except select. Socket not created.');
+        }
+
         $selectExcept = array($this->resource);
         $null = NULL;
-        return self::select($null, $null, $selectExcept, $second, $usecond);
+        return (bool) self::select($null, $null, $selectExcept, $second, $usecond);
     }
 
     /**

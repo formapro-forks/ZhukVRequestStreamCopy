@@ -82,14 +82,14 @@ interface SocketInterface
      *
      * @param int $flags
      */
-    public function setFlags($flags);
+    public function setFlag($flags);
 
     /**
      * Get flags for open socket
      *
      * @return int
      */
-    public function getFlags();
+    public function getFlag();
 
     /**
      * Get full uri for open socket

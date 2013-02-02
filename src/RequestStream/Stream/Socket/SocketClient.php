@@ -60,9 +60,9 @@ class SocketClient extends Socket
         }
 
         if ($this->context) {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag, $this->getContext(false));
+            $resource = stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag, $this->getContext(true));
         } else {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag);
+            $resource = stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag);
         }
 
         if (!$resource) {

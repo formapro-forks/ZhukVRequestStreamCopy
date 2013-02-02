@@ -161,7 +161,7 @@ interface SocketInterface
      * @param string $content
      * @param int $length
      */
-    public function write($content, $length = NULL);
+    public function write($content, $length = null);
 
     /**
      * Read from socket

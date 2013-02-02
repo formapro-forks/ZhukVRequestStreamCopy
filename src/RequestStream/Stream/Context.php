@@ -14,12 +14,12 @@ namespace RequestStream\Stream;
 use RequestStream\Stream\StreamAbstract;
 
 /**
- * Abstract core for control socket and stream
+ * Context
  */
 class Context extends StreamAbstract  implements ContextInterface
 {
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public static function getDefault(array $options = array())
     {
@@ -27,9 +27,9 @@ class Context extends StreamAbstract  implements ContextInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function getOptions($streamOrContext = NULL)
+    public function getOptions($streamOrContext = null)
     {
         if ($streamOrContext) {
             if (!is_resource($streamOrContext)) {
@@ -43,9 +43,9 @@ class Context extends StreamAbstract  implements ContextInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function getParams($streamOrContext = NULL)
+    public function getParams($streamOrContext = null)
     {
         if ($streamOrContext) {
             if (!is_resource($streamOrContext)) {
@@ -59,7 +59,7 @@ class Context extends StreamAbstract  implements ContextInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function create(array $options = array(), array $params = array())
     {
@@ -73,9 +73,9 @@ class Context extends StreamAbstract  implements ContextInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function is($autoload = FALSE, array $options = array())
+    public function is($autoload = false, array $options = array())
     {
         if (!$autoload) {
             return (bool) $this->resource;
@@ -83,7 +83,7 @@ class Context extends StreamAbstract  implements ContextInterface
 
         try {
             if (is_resource($this->resource)) {
-              return TRUE;
+              return true;
             }
 
             $options += array(
@@ -92,8 +92,7 @@ class Context extends StreamAbstract  implements ContextInterface
             );
 
             $this->create($options['options'], $options['params']);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return FALSE;
         }
 
@@ -101,9 +100,9 @@ class Context extends StreamAbstract  implements ContextInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function setOptions($wrapper, $paramName = NULL,  $paramValue = NULL)
+    public function setOptions($wrapper, $paramName = null,  $paramValue = null)
     {
         if (is_array($wrapper)) {
             foreach ($wrapper as $wrapperName => $wrapperOptions) {
@@ -113,25 +112,22 @@ class Context extends StreamAbstract  implements ContextInterface
 
                 self::validateOptionsContext($wrapperName, $wrapperOptions);
             }
-        }
-        else {
+        } else {
             if (is_object($wrapper) && method_exists($wrapper, '__toString')) {
                 $wrapper = (string) $wrapper;
             }
 
             if (!is_string($wrapper)) {
-                throw new \InvalidArgumentException(sprintf('Wrapper name must be a string, %s given', gettype($wrapper)));
+                throw new \InvalidArgumentException(sprintf('Wrapper name must be a string, %s given.', gettype($wrapper)));
             }
 
             if (is_array($paramName)) {
                 self::validateOptionsContext($wrapper, $paramName);
                 $wrapper = array($wrapper => $paramName);
-            }
-            else if (is_string($paramName)) {
+            } else if (is_string($paramName)) {
                 self::validateOptionsContext($wrapper, array($paramName => $paramValue));
                 $wrapper = array($wrapper => array($paramName => $paramValue));
-            }
-            else {
+            } else {
                 throw new \InvalidArgumentException('Can\'t set options (Error: Can\'t validate options).');
             }
         }
@@ -140,7 +136,7 @@ class Context extends StreamAbstract  implements ContextInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setParams(array $params)
     {
@@ -149,11 +145,12 @@ class Context extends StreamAbstract  implements ContextInterface
 
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     final public function validateOptionsContext($wrapper, array $options)
     {
         $allowedOptions = self::getAllowedOptionsContext($wrapper);
+
         // Validate wrapper name
         if (!$allowedOptions) {
             throw new \InvalidArgumentException(sprintf('Can\'t validate wrapper options. Undefined wrapper "%s"', $wrapper));
@@ -172,11 +169,9 @@ class Context extends StreamAbstract  implements ContextInterface
                 if (!in_array($value, $type)) {
                     throw new \InvalidArgumentException(sprintf('Key "%s" must be value of array: "%s"', $key, implode('", "', $type)));
                 }
-            }
-            else if ($type == 'mixed') {
+            } else if ($type == 'mixed') {
                 // Not used mixed values
-            }
-            else {
+            } else {
                 // Validate of type
                 switch ($type) {
                     case 'integer':
@@ -206,9 +201,8 @@ class Context extends StreamAbstract  implements ContextInterface
         }
     }
 
-
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     final public static function getAllowedOptionsContext($wrapper = NULL)
     {
@@ -276,6 +270,6 @@ class Context extends StreamAbstract  implements ContextInterface
             )
         );
 
-        return $wrapper ? (isset($wrappers[$wrapper]) ? $wrappers[$wrapper] : FALSE) : $wrappers;
+        return $wrapper ? (isset($wrappers[$wrapper]) ? $wrappers[$wrapper] : false) : $wrappers;
     }
 }

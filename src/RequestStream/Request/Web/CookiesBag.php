@@ -31,11 +31,9 @@ class CookiesBag extends ParametersBag
         if ($name instanceof Cookie) {
             $value = $name;
             $name = $name->getName();
-        }
-        else if ($value instanceof Cookie) {
+        } else if ($value instanceof Cookie) {
             $name = $value->getName();
-        }
-        else {
+        } else {
             $value = new Cookie($name, $value);
         }
 

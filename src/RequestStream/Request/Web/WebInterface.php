@@ -42,7 +42,7 @@ interface WebInterface
      *
      * @param bool $status
      */
-    public function setRedirectCookie($status = TRUE);
+    public function setRedirectCookie($status = true);
 
     /**
      * Send request
@@ -51,7 +51,7 @@ interface WebInterface
      *
      * @return Result
      */
-    public function sendRequest($reset = FALSE);
+    public function sendRequest($reset = false);
 
     /**
      * Get result request
@@ -60,5 +60,5 @@ interface WebInterface
      *
      * @return Result
      */
-    public function getResult($reset = FALSE);
+    public function getResult($reset = false);
 }

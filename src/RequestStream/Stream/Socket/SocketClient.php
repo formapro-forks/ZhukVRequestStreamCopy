@@ -50,27 +50,25 @@ class SocketClient extends Socket
         return $this->flag;
     }
 
-        /**
+    /**
      * @{inerhitDoc}
      */
     public function create()
     {
-        if ($this->is(FALSE)) {
+        if ($this->is(false)) {
             return $this->resource;
         }
 
         if ($this->context) {
-            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag, $this->getContext(TRUE));
-        }
-        else {
+            $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag, $this->getContext(false));
+        } else {
             $resource = @stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag);
         }
 
         if (!$resource) {
             if (!$errorCode && !$errorStr) {
                 throw new SocketErrorException('Socket not create. Technical error in system.', 0);
-            }
-            else {
+            } else {
                 throw new SocketErrorException($errorCode . ': ' . $errorStr, $errorCode);
             }
         }

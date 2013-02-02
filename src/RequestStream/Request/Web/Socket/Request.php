@@ -9,13 +9,12 @@
  * file that was distributed with this source code
  */
 
-
 namespace RequestStream\Request\Web\Socket;
 
-use RequestStream\Request\Web\WebAbstract,
-    RequestStream\Stream\Socket\SocketClient,
-    RequestStream\Stream\Context,
-    RequestStream\Request\Web\Result;
+use RequestStream\Request\Web\WebAbstract;
+use RequestStream\Stream\Socket\SocketClient;
+use RequestStream\Stream\Context;
+use RequestStream\Request\Web\Result;
 
 /**
  * Core for socket web request
@@ -25,23 +24,15 @@ class Request extends WebAbstract implements RequestInterface
     /**
      * @var resource
      */
-    protected $socket = NULL;
+    protected $socket;
 
     /**
      * @var string
      */
-    protected $bindTo = NULL;
+    protected $bindTo;
 
     /**
-     * Set bind to
-     *    Set other IP and port for request in our system
-     *
-     * @param string $ip
-     *    Ip and port for connext
-     *    Must be mask: ip:port
-     *    Can use IPv4 and IPv6
-     *
-     * @see http://www.php.net/manual/en/context.socket.php
+     * {@inheritDoc}
      */
     public function setBindTo($bindTo)
     {
@@ -79,8 +70,7 @@ class Request extends WebAbstract implements RequestInterface
         // Init socket by scheme
         if ($requestUri->getSecure()) {
             $this->initSocketSSL();
-        }
-        else {
+        } else {
             $this->initSocket();
         }
 
@@ -97,8 +87,7 @@ class Request extends WebAbstract implements RequestInterface
             $this->socket->setPort($this->request->getProxy()->getPort());
             // Now only tcp transport allowed
             $this->socket->setTransport('tcp');
-        }
-        else {
+        } else {
             $this->socket->setTarget($requestUri->getHost());
         }
 
@@ -111,14 +100,14 @@ class Request extends WebAbstract implements RequestInterface
         $this->writeHeaderToSocket();
 
         // Start usage time
-        $useTime = microtime(TRUE);
+        $useTime = microtime(true);
 
         // Generate result
-        return Result::parseFromContent($this->socket->read(), microtime(TRUE) - $useTime);
+        return Result::parseFromContent($this->socket->read(), microtime(true) - $useTime);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     protected function prepareHeaders()
     {

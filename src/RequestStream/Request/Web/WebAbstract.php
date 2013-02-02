@@ -11,14 +11,14 @@
 
 namespace RequestStream\Request\Web;
 
-use RequestStream\Request\Exception\UriException,
-    RequestStream\Request\Exception\HeadersException,
-    RequestStream\Request\Exception\RequestException,
-    RequestStream\Request\Exception\ResultException,
-    RequestStream\Request\Exception\RedirectException,
-    RequestException\Request\Exception\XmlDataException,
-    RequestStream\Request\Web\Result,
-    RequestStream\Stream\Context\Context;
+use RequestStream\Request\Exception\UriException;
+use RequestStream\Request\Exception\HeadersException;
+use RequestStream\Request\Exception\RequestException;
+use RequestStream\Request\Exception\ResultException;
+use RequestStream\Request\Exception\RedirectException;
+use RequestException\Request\Exception\XmlDataException;
+use RequestStream\Request\Web\Result;
+use RequestStream\Stream\Context\Context;
 
 /**
  * Abstract core for web request
@@ -53,14 +53,14 @@ abstract class WebAbstract implements WebInterface
     /**
      * @var boolean
      */
-    protected $redirectUseCookie = TRUE;
+    protected $redirectUseCookie = true;
 
     /**
      * Construct
      *
      * @param string|Uri $uri
      */
-    public function __construct($uri = NULL)
+    public function __construct($uri = null)
     {
         $this->request = new DefaultRequest();
 
@@ -70,7 +70,7 @@ abstract class WebAbstract implements WebInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setRequest(RequestInterface $request)
     {
@@ -80,40 +80,11 @@ abstract class WebAbstract implements WebInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getRequest()
     {
         return $this->request;
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function setXmlData($xmlData)
-    {
-        if (count($this->postData)) {
-            throw new \LogicException('Can\'t set XML Data, because already exists POST Data. Please clear post data.');
-        }
-
-        if (is_string($xmlData)) {
-            $domDocument = new \DOMDocument;
-
-            // Load xml data without warnings
-            if(!@$domDocument->loadXML(trim($xmlData))) {
-                throw new \RuntimeException('Can\'t load xml data to DOMDocument object.');
-            }
-
-            $this->xmlData = $domDocument;
-        }
-        else if ($xmlData instanceof \DOMDocument) {
-            $this->xmlData = $xmlData;
-        }
-        else {
-            throw new \RuntimeException('XML data must be a string or DOMDocument object.');
-        }
-
-        return $this;
     }
 
     /**
@@ -143,7 +114,7 @@ abstract class WebAbstract implements WebInterface
      *
      * @param bool $status
      */
-    public function setRedirectCookie($status = TRUE)
+    public function setRedirectCookie($status = true)
     {
         $this->redirectUseCookie = (bool) $status;
 
@@ -151,34 +122,17 @@ abstract class WebAbstract implements WebInterface
     }
 
     /**
-     * Prepare headers
+     * {@inheritDoc}
      */
-    protected function prepareHeaders()
-    {
-        throw new \RuntimeException('DEPRECATED');
-
-        // If using XML data
-        if ($this->xmlData) {
-            if (!$this->headers->has('Content-Type')) {
-                $this->headers['Content-Type'] = 'application/xml';
-            }
-
-            $this->setMethod('POST');
-        }
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function getResult($reset = FALSE)
+    public function getResult($reset = false)
     {
         return $this->sendRequest($reset);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function sendRequest($reset = FALSE)
+    public function sendRequest($reset = false)
     {
         if (!$this->request) {
             throw new RequestException('Can\'t send request to remote address. Undefined request data.');
@@ -197,7 +151,7 @@ abstract class WebAbstract implements WebInterface
         $webResult = $this->createRequest();
 
         if (!$webResult instanceof ResultInterface) {
-            $this->result = NULL;
+            $this->result = null;
             throw new ResultException('Can\'t get result. Result must be instance of ResultInterface.');
         }
 
@@ -237,8 +191,7 @@ abstract class WebAbstract implements WebInterface
 
         if (strpos($locationTo, '/') === 0) {
             $locationTo = $this->uri->getDomain() . $locationTo;
-        }
-        else if (strpos($locationTo, 'http') === FALSE) {
+        } else if (strpos($locationTo, 'http') === false) {
             $locationTo = $this->uri->getDomain() .
                 rtrim($this->uri->getPath(), '/') .
                 '/' . $locationTo;
@@ -261,7 +214,7 @@ abstract class WebAbstract implements WebInterface
 
         $this->request = $requestData;
 
-        return $this->sendRequest(TRUE);
+        return $this->sendRequest(true);
     }
 
 

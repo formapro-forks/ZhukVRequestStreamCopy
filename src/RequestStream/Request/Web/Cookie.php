@@ -62,7 +62,7 @@ class Cookie
      * @param boolean $secure
      * @param boolean $httpOnly
      */
-    public function __construct($name, $value, \DateTime $expires = NULL, $path = NULL, $domain = NULL, $secure = FALSE, $httpOnly = TRUE)
+    public function __construct($name, $value, \DateTime $expires = null, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
         $this->name = $name;
         $this->value = $value;
@@ -96,7 +96,7 @@ class Cookie
     /**
      * Get expires
      *
-     * @return \DateTime|NULL
+     * @return \DateTime|null
      */
     public function getExpires()
     {

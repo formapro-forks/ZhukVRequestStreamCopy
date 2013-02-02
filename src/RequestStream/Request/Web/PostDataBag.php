@@ -24,7 +24,7 @@ class PostDataBag extends ParametersBag
     protected $boundary;
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -33,18 +33,18 @@ class PostDataBag extends ParametersBag
         }
 
         // Reset boundary
-        $this->boundary = NULL;
+        $this->boundary = null;
 
         return parent::offsetSet($offset, $value);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function offsetUnset($offset)
     {
         // Reset boundary
-        $this->boundary = NULL;
+        $this->boundary = null;
 
         return parent::offsetUnset($offset);
     }

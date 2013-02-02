@@ -13,7 +13,6 @@ namespace RequestStream\Request\Web;
 
 use RequestStream\Request\Exception\ResultException;
 
-
 /**
  * Base core for control result web request
  */
@@ -52,18 +51,18 @@ class Result implements ResultInterface
     /**
      * Construct
      */
-    public function __construct($code = 200,  $data = NULL, $protocol = NULL, HeadersBag $headers = NULL, CookiesBag $cookies = NULL, $requestTime = NULL)
+    public function __construct($code = 200,  $data = null, $protocol = null, HeadersBag $headers = null, CookiesBag $cookies = null, $requestTime = null)
     {
         $this->code = $code;
         $this->data = $data;
         $this->protocol = $protocol;
-        $this->headers = $headers === NULL ? new HeadersBag : $headers;
-        $this->cookies = $cookies === NULL ? new CookiesBag : $cookies;
+        $this->headers = $headers === null ? new HeadersBag : $headers;
+        $this->cookies = $cookies === null ? new CookiesBag : $cookies;
         $this->requestTime = $requestTime;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getData()
     {
@@ -71,7 +70,7 @@ class Result implements ResultInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getHeaders()
     {
@@ -79,7 +78,7 @@ class Result implements ResultInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getCode()
     {
@@ -87,7 +86,7 @@ class Result implements ResultInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getProtocol()
     {
@@ -95,15 +94,15 @@ class Result implements ResultInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function getCookies($name = NULL)
+    public function getCookies($name = null)
     {
         return $this->cookies;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getRequestTime()
     {
@@ -111,14 +110,14 @@ class Result implements ResultInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    static public function parseFromContent($content, $requestTime = NULL)
+    static public function parseFromContent($content, $requestTime = null)
     {
         $content = explode("\r\n\r\n", $content, 2);
 
         if (!count($content)) {
-          throw new ResultException('Can\'t parse page content. Not found header or page section.');
+            throw new ResultException('Can\'t parse page content. Not found header or page section.');
         }
 
         $info = self::parsePageHeaders($content[0]);
@@ -134,13 +133,13 @@ class Result implements ResultInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     protected static function parsePageHeaders($headerContent)
     {
         $result = array(
-            'protocol' => NULL,
-            'code' => NULL,
+            'protocol' => null,
+            'code' => null,
             'headers' => new HeadersBag,
             'cookies' => new CookiesBag
         );
@@ -151,12 +150,11 @@ class Result implements ResultInterface
         unset ($headers[0]);
 
         foreach ($headers as $h) {
-           list ($key, $value) = explode(':', $h, 2);
+            list ($key, $value) = explode(':', $h, 2);
 
             if (strtolower($key) == 'set-cookie') {
-                $result['cookies']->add(Cookie::parseFromString($value), NULL);
-            }
-            else {
+                $result['cookies']->add(Cookie::parseFromString($value), null);
+            } else {
                 $result['headers']->add(trim($key), trim($value, '" '));
             }
         }

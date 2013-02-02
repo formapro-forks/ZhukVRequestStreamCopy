@@ -19,7 +19,7 @@ interface StreamInterface
     /**
      * Get stream transport
      *
-     * @return string
+     * @return array
      */
     public static function getTransports();
 
@@ -68,7 +68,7 @@ interface StreamInterface
      * @param integer $seconds
      * @param integer $useconds
      */
-    public static function select(array &$read = NULL, array &$write = NULL, array &$except = NULL, $sec = 1, $usec = 0);
+    public static function select(array &$read = null, array &$write = null, array &$except = null, $sec = 1, $usec = 0);
 
     /**
      * Is created stream
@@ -77,7 +77,7 @@ interface StreamInterface
      *
      * @return bool
      */
-    public function is($autoload = FALSE);
+    public function is($autoload = false);
 
     /**
      * Create stream
@@ -86,7 +86,6 @@ interface StreamInterface
 
     /**
      * Get resource of stream.
-     *  If stream not opened, create strem.
      *
      * @return resource
      */

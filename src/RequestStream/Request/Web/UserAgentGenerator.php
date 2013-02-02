@@ -23,7 +23,7 @@ class UserAgentGenerator
      *
      * @return srtring
      */
-    static public function generateUserAgent($browser = NULL)
+    static public function generateUserAgent($browser = null)
     {
         //Possible processors on Linux
         $linuxProc = array( 'i686', 'x86_64' );
@@ -38,23 +38,22 @@ class UserAgentGenerator
         );
 
         $allowedBrowser = array('Firefox', 'Opera', 'Chrome', 'IE', 'Safari');
-        if ($browser !== NULL){
-            $notBrowser = TRUE;
+        if ($browser !== null){
+            $notBrowser = true;
             foreach ($allowedBrowser as $ab) {
                 if (strtolower($ab) == strtolower($browser)) {
                     $browser = $ab;
-                    $notBrowser = FALSE;
+                    $notBrowser = false;
                 }
             }
 
-            if ($notBrowser === TRUE) {
+            if ($notBrowser === true) {
                 throw new \InvalidArgumentException(sprintf(
                     'Undefined browser "%s". Allowed browsers: "%s"',
                     $browser, implode('", "', $allowedBrowser)
                 ));
             }
-        }
-        else {
+        } else {
             $type = $allowedBrowser[array_rand($allowedBrowser)];
         }
 

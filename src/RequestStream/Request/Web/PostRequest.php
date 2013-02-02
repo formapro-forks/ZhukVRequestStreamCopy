@@ -59,7 +59,7 @@ class PostRequest extends DefaultRequest
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setMethod($method)
     {
@@ -70,7 +70,7 @@ class PostRequest extends DefaultRequest
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function prepare()
     {

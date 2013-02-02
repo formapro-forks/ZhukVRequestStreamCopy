@@ -54,7 +54,7 @@ class Uri
     /**
      * Construct
      */
-    public function __construct($host, $path = '/', $port = NULL, $secure = FALSE, array $query = array(), $fragment = NULL, array $userLogin = array())
+    public function __construct($host, $path = '/', $port = null, $secure = false, array $query = array(), $fragment = null, array $userLogin = array())
     {
         $this->host = $host;
         $this->path = $path;
@@ -62,7 +62,7 @@ class Uri
         $this->secure = (bool) $secure;
         $this->query = $query;
         $this->fragment = $fragment;
-        $this->userLogin = $userLogin + array('user' => NULL, 'password' => NULL);
+        $this->userLogin = $userLogin + array('user' => null, 'password' => null);
     }
 
     /**
@@ -78,8 +78,7 @@ class Uri
             if (!in_array($tmp[1], array('http', 'https'))) {
                 throw new UriException(sprintf('Uri must be beginning from "http" or "https" (Beginning with: "%s")', $tmp[1]));
             }
-        }
-        else {
+        } else {
             $url = 'http://' . $url;
         }
 
@@ -96,11 +95,11 @@ class Uri
         }
 
         $parseUri += array(
-            'user' => NULL,
-            'pass' => NULL,
-            'fragment' => NULL,
+            'user' => null,
+            'pass' => null,
+            'fragment' => null,
             'query' => array(),
-            'port' => NULL,
+            'port' => null,
             'path' => '/'
         );
 
@@ -108,7 +107,7 @@ class Uri
             $parseUri['host'],
             $parseUri['path'],
             $parseUri['port'],
-            $parseUri['scheme'] === 'https' ? TRUE : FALSE,
+            $parseUri['scheme'] === 'https' ? true : false,
             $parseUri['query'],
             $parseUri['fragment']
         );

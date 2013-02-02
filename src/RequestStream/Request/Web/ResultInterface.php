@@ -66,5 +66,5 @@ interface ResultInterface
      *
      * @return ResultInterface
      */
-    static public function parseFromContent($content, $useTime = NULL);
+    static public function parseFromContent($content, $useTime = null);
 }

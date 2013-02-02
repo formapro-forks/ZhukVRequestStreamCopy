@@ -24,7 +24,7 @@ class HeadersBag extends ParametersBag
     protected $_storageReal = array();
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function offsetSet($name, $value)
     {
@@ -67,7 +67,7 @@ class HeadersBag extends ParametersBag
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function offsetGet($name)
     {
@@ -75,7 +75,7 @@ class HeadersBag extends ParametersBag
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function offsetExists($name)
     {
@@ -83,7 +83,7 @@ class HeadersBag extends ParametersBag
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function offsetUnset($name)
     {

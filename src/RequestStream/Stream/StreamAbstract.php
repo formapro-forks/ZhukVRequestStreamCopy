@@ -22,7 +22,7 @@ abstract class StreamAbstract implements StreamInterface
     protected $resource = NULL;
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public static function getTransports()
     {
@@ -30,7 +30,7 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public static function isTransport($transport)
     {
@@ -38,7 +38,7 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public static function getWrappers()
     {
@@ -46,7 +46,7 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public static function isWrapper($wrapper)
     {
@@ -54,7 +54,7 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public static function resolveIncludePath($file)
     {
@@ -62,9 +62,9 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public static function select(array &$read = NULL, array &$write = NULL, array &$except = NULL, $sec = 1, $usec = 0)
+    public static function select(array &$read = null, array &$write = null, array &$except = null, $sec = 1, $usec = 0)
     {
         if (!$read && !$write && !$except) {
             throw new \InvalidArgumentException('Not found streams for select.');
@@ -74,9 +74,9 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function is($autoload = FALSE)
+    public function is($autoload = false)
     {
         if (!$autoload) {
             return (bool) $this->resource;
@@ -84,20 +84,19 @@ abstract class StreamAbstract implements StreamInterface
 
         try{
             $this->create();
-        }
-        catch (\Exception $e) {
-            return FALSE;
+        } catch (\Exception $e) {
+            return false;
         }
 
         return (bool) $this->resource;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getResource()
     {
-        if ($this->resource === NULL) {
+        if ($this->resource === null) {
             $this->create();
         }
 
@@ -105,7 +104,7 @@ abstract class StreamAbstract implements StreamInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     abstract function create();
 }

@@ -11,7 +11,6 @@
 
 namespace RequestStream\Stream;
 
-
 /**
  * Interface for control context
  */
@@ -34,49 +33,46 @@ interface ContextInterface
     /**
      * Get params from content
      *
-     * @param resource $streamOrContent (Optional)
+     * @param resource $streamOrContent
      *
      * @return array
      */
-    public function getParams($streamOrContext = NULL);
+    public function getParams($streamOrContext = null);
 
     /**
      * Get options from content
      *
-     * @param resource $streamOrContext (Optional)
+     * @param resource $streamOrContext
      *
      * @return array
      */
-    public function getOptions($streamOrContext = NULL);
+    public function getOptions($streamOrContext = null);
 
     /**
      * Set options to context
      *
-     * @param string $wrapper   Wrapper of stream (http, ssl, ftp, etc...)
+     * @param string $wrapper
      * @param string $paramName
      * @param string $paramValue
      *
      * @return null
-     *    Exception, if not allowed wrapper in system,
-     *    or not allowed variables for wrapper
      */
-    public function setOptions($wrapper, $paramName = NULL,  $paramValue = NULL);
+    public function setOptions($wrapper, $paramName = null,  $paramValue = null);
 
     /**
      * Set params to context
      *
-     * @return null
+     * @param array $params
      */
     public function setParams(array $params);
 
     /**
      * Is created content
      *
-     * @param bool $autoload    If auto start create stream of context
-     * @param array $options (Optionan)
-     *    Options for create context. If $autoload = TRUE
+     * @param bool $autoload
+     * @param array $options
      */
-    public function is($autoload = FALSE, array $options = array());
+    public function is($autoload = false, array $options = array());
 
     /**
      * Create stream of context

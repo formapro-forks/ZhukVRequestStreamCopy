@@ -9,11 +9,10 @@
  * file that was distributed with this source code
  */
 
-
 namespace RequestStream\Stream\Socket;
 
-use RequestStream\Stream\ContextInterface,
-    RequestStream\Stream\StreamAbstract;
+use RequestStream\Stream\ContextInterface;
+use RequestStream\Stream\StreamAbstract;
 
 /**
  * Abstract core for control stream socket
@@ -23,22 +22,22 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     /**
      * @var ContextInterface
      */
-    protected $context = NULL;
+    protected $context;
 
     /**
      * @var string
      */
-    protected $transport = NULL;
+    protected $transport;
 
     /**
      * @var string
      */
-    protected $target = NULL;
+    protected $target;
 
     /**
      * @var integer
      */
-    protected $port = NULL;
+    protected $port;
 
     /**
      * @var resource
@@ -46,9 +45,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     protected $resource;
 
     /**
-     * Set context
-     *
-     * @param ContextInterface $context
+     * {@inheritDoc}
      */
     public function setContext(ContextInterface $context)
     {
@@ -58,23 +55,23 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function getContext($originalResource = FALSE)
+    public function getContext($originalResource = false)
     {
         if (!$this->context) {
-            return FALSE;
+            return false;
         }
 
-        return $originalResource ? ($this->context ? $this->context->getResource() : FALSE) : $this->context;
+        return $originalResource ? ($this->context ? $this->context->getResource() : false) : $this->context;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setTransport($transport)
     {
-        if ($this->is(FALSE)) {
+        if ($this->is(false)) {
             throw new \RuntimeException('Can\'t set transport for socket. Socket is started.');
         }
 
@@ -89,7 +86,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getTransport()
     {
@@ -97,7 +94,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setTarget($target)
     {
@@ -107,7 +104,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getTarget()
     {
@@ -122,7 +119,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     public function setPort($port)
     {
         // Validate port
-        if (!is_numeric($port) || strpos($port, '.') !== FALSE) {
+        if (!is_numeric($port) || strpos($port, '.') !== false) {
             throw new \InvalidArgumentException(sprintf('Port must be integer value, "%s" given.', $port));
         }
 
@@ -136,7 +133,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getPort()
     {
@@ -144,7 +141,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getRemoteSocket()
     {
@@ -164,9 +161,9 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function is($autoload = FALSE)
+    public function is($autoload = false)
     {
         if (!$autoload) {
             return (bool) $this->resource;
@@ -181,7 +178,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function close()
     {
@@ -194,13 +191,13 @@ abstract class Socket extends StreamAbstract implements SocketInterface
 
         // Destruct
         unset ($this->resource);
-        $this->resource = NULL;
+        $this->resource = null;
 
         return $this;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function shutdown($mode = STREAM_SHUT_RDWR)
     {
@@ -214,11 +211,11 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setBlocking($mode)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t set blocking of mode stream. Socket not created.');
         }
 
@@ -226,11 +223,11 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setTimeout($second, $milisecond = 0)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t set timetout. Socket not created.');
         }
 
@@ -238,70 +235,69 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function selectRead($seconds = 1, $useconds = 0)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t get read select. Socket not created.');
         }
 
         $selectRead = array($this->resource);
-        $null = NULL;
+        $null = null;
         return (bool) self::select($selectRead, $null, $null, $seconds, $useconds);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function selectWrite($second = 1, $usecond = 0)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t get write select. Socket not created.');
         }
 
         $selectWrite = array($this->resource);
-        $null = NULL;
+        $null = null;
         return (bool) self::select($null, $selectWrite, $null, $second, $usecond);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function selectExcept($second = 1, $usecond = 0)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t get except select. Socket not created.');
         }
 
         $selectExcept = array($this->resource);
-        $null = NULL;
+        $null = null;
         return (bool) self::select($null, $null, $selectExcept, $second, $usecond);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function write($content, $length = NULL)
+    public function write($content, $length = null)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t write to socket. Socket not created.');
         }
 
-        if ($length === NULL) {
+        if ($length === null) {
             return fwrite($this->getResource(), $content);
-        }
-        else {
+        } else {
             return fwrite($this->getResource(), $content, $length);
         }
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function read($length = -1, $offset = -1)
     {
-        if (!$this->is(FALSE)) {
+        if (!$this->is(false)) {
             throw new \RuntimeException('Can\'t read from socket. Socket not started.');
         }
 

@@ -49,19 +49,19 @@ class CookieFilter extends \FilterIterator
      * @param string $domain
      * @param \DateTime $expires
      */
-    public function __construct(\Iterator $iterator, $path = NULL, $domain = NULL, \DateTime $expires = NULL, $secure = NULL, $httpOnly = NULL)
+    public function __construct(\Iterator $iterator, $path = null, $domain = null, \DateTime $expires = null, $secure = null, $httpOnly = null)
     {
         parent::__construct($iterator);
 
         $this->path = $path;
         $this->domain = $domain;
         $this->expires = $expires;
-        $this->secure = $secure === NULL ? NULL : (bool) $secure;
-        $this->httpOnly = $secure === NULL ? NULL : (bool) $httpOnly;
+        $this->secure = $secure === null ? null : (bool) $secure;
+        $this->httpOnly = $secure === null ? null : (bool) $httpOnly;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function accept()
     {
@@ -74,14 +74,14 @@ class CookieFilter extends \FilterIterator
             ));
         }
 
-        if ($this->httpOnly !== NULL && $this->httpOnly != $cookie->getHttpOnly()) {
-            return FALSE;
+        if ($this->httpOnly !== null && $this->httpOnly != $cookie->getHttpOnly()) {
+            return false;
         }
 
-        if ($this->secure !== NULL && $this->secure != $cookie->getSecure()) {
-            return FALSE;
+        if ($this->secure !== null && $this->secure != $cookie->getSecure()) {
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 }

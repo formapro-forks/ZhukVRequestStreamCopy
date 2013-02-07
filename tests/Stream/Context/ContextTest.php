@@ -58,14 +58,14 @@ class StreamContextTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($context instanceof ContextInterface);
 
         // Test started
-        $this->assertFalse($context->is(FALSE));
+        $this->assertFalse($context->is(false));
 
         // Create context
         $context->create();
 
         $this->assertTrue(is_resource($context->getResource()));
         $this->assertTrue(is_array($context->getOptions()));
-        $this->assertTrue($context->is(FALSE));
+        $this->assertTrue($context->is(false));
     }
 
     /**
@@ -81,11 +81,11 @@ class StreamContextTest extends \PHPUnit_Framework_TestCase
             'user_agent' => 'new_user_agent',
             'timeout' => 30,
             'proxy' => 'localhost',
-            'request_fulluri' => array(TRUE, FALSE),
+            'request_fulluri' => array(true, false),
             'follow_location' => array(2, 5),
             'max_redirects' => array(2, 5),
             'protocol_version' => array('1.0', '1.1'),
-            'ignore_errors' => array(TRUE, FALSE)
+            'ignore_errors' => array(true, false)
         );
 
         $this->setOptionsToContext('http', $httpOptions, $context);

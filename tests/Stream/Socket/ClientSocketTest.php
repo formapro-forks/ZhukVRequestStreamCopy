@@ -14,14 +14,35 @@ namespace RequestStream\Stream\Socket;
 /**
  * Client socket test
  */
-class ClientSocketTest extends \PHPUnit_Framework_TestCase
+class ClientSocketTest extends SocketTest
 {
+    /**
+     * {@inheritDoc}
+     */
+    protected function createSocket()
+    {
+        return new SocketClient();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSupportedFlags()
+    {
+        return array(
+            STREAM_CLIENT_CONNECT,
+            STREAM_CLIENT_ASYNC_CONNECT,
+            STREAM_CLIENT_PERSISTENT
+        );
+    }
+
     /**
      * Create socket to google connection
      */
     protected function createSocketGoogleConnection()
     {
         $socket = new SocketClient();
+
         return $socket
             ->setTransport('tcp')
             ->setPort(80)
@@ -31,7 +52,7 @@ class ClientSocketTest extends \PHPUnit_Framework_TestCase
     /**
      * Base write header to google connection
      */
-    protected function baseWriteHeaderToGoogleConnection(SocketClient $socket = NULL)
+    protected function baseWriteHeaderToGoogleConnection(SocketClient $socket = null)
     {
         $message = "GET / HTTP/1.0\nHost: google.com\n\n";
 
@@ -68,117 +89,11 @@ class ClientSocketTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test socket remote URI
-     */
-    public function testSocketRemoteUri()
-    {
-        $socketClient = new SocketClient;
-
-        try {
-            $socketClient->getRemoteSocket();
-            $this->fail('Can\'t create remote socket wihout port, transport and target.');
-        }
-        catch (\Exception $e){
-        }
-
-        $socketClient->setTransport('tcp');
-
-        try {
-            $socketClient->getRemoteSocket();
-            $this->fail('Can\'t create remote socket without port and target');
-        }
-        catch (\Exception $e){
-        }
-
-        $socketClient->setPort(80);
-
-        try {
-            $socketClient->getRemoteSocket();
-            $this->fail('Can\'t create remote socket without target.');
-        }
-        catch (\Exception $e){
-        }
-
-        $socketClient->setTarget('google.com');
-
-        $this->assertEquals($socketClient->getRemoteSocket(), 'tcp://google.com:80');
-
-        try {
-            $socketClient->setPort('foo');
-            $this->fail('Not control port.');
-        }
-        catch (\InvalidArgumentException $e){
-        }
-
-        try {
-            $socketClient->setTransport('foo');
-            $this->fail('Not control transport.');
-        }
-        catch (\InvalidArgumentException $e){
-        }
-    }
-
-    /**
-     * Test flags
-     */
-    public function testSocketFlags()
-    {
-        $allowedFlags = array(STREAM_CLIENT_CONNECT, STREAM_CLIENT_ASYNC_CONNECT, STREAM_CLIENT_PERSISTENT);
-
-        $socket = new SocketClient;
-        foreach ($allowedFlags as $flag) {
-            $socket->setFlag($flag);
-        }
-
-        try {
-            $socket->setFlag('Undefined');
-            $this->fail('Not control flag.');
-        }
-        catch (\Exception $e){
-        }
-    }
-
-    /**
      * Test socket options
      */
     public function testSocketOptions()
     {
         $socket = $this->createSocketGoogleConnection();
-
-        try {
-            $socket->setBlocking(0);
-            $this->fail('Can\'t set blocking mode.');
-        }
-        catch (\Exception $e){
-        }
-
-        try {
-            $socket->setTimeout(0);
-            $this->fail('Can\'t set timeout.');
-        }
-        catch (\Exception $e){
-        }
-
-        try {
-            $socket->selectRead();
-            $this->fail('Can\'t get select read.');
-        }
-        catch (\Exception $e){
-        }
-
-        try {
-            $socket->selectWrite();
-            $this->fail('Can\'t get select write.');
-        }
-        catch (\Exception $e){
-        }
-
-        try {
-            $socket->selectExcept();
-            $this->fail('Can\'t get select except.');
-        }
-        catch (\Exception $e){
-        }
 
         $socket->create();
 
@@ -199,7 +114,7 @@ class ClientSocketTest extends \PHPUnit_Framework_TestCase
         $socket->close();
 
         $refProperty = new \ReflectionProperty($socket, 'resource');
-        $refProperty->setAccessible(TRUE);
+        $refProperty->setAccessible(true);
         $this->assertFalse(is_resource($refProperty->getValue($socket)));
     }
 }

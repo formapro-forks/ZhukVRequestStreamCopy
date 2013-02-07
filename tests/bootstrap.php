@@ -11,3 +11,5 @@ else if (file_exists($file = './vendor/autoload.php')) {
 else {
   throw new \RuntimeException("Not found composer autoload");
 }
+
+require_once __DIR__ . '/Stream/Socket/SocketTest.php';

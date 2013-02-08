@@ -16,7 +16,7 @@ use RequestStream\Stream\Exception\SocketErrorException;
 /**
  * Client socket connection
  */
-class SocketClient extends Socket
+class SocketClient extends Socket implements SocketClientInterface
 {
     /**
      * @var resource

@@ -167,8 +167,7 @@ abstract class Socket extends StreamAbstract implements SocketInterface
     {
         if (!$autoload) {
             return (bool) $this->resource;
-        }
-        else {
+        } else {
             if (!$this->resource) {
                 $this->create();
             }

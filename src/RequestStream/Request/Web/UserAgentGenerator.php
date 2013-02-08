@@ -23,7 +23,7 @@ class UserAgentGenerator
      *
      * @return srtring
      */
-    static public function generateUserAgent($browser = null)
+    public static function generateUserAgent($browser = null)
     {
         //Possible processors on Linux
         $linuxProc = array( 'i686', 'x86_64' );
@@ -35,9 +35,12 @@ class UserAgentGenerator
         $lang = array(
             'ru',
             'ru-RU',
+            'en',
+            'en-EN'
         );
 
         $allowedBrowser = array('Firefox', 'Opera', 'Chrome', 'IE', 'Safari');
+
         if ($browser !== null){
             $notBrowser = true;
             foreach ($allowedBrowser as $ab) {

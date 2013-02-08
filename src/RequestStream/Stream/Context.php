@@ -93,7 +93,7 @@ class Context extends StreamAbstract  implements ContextInterface
 
             $this->create($options['options'], $options['params']);
         } catch (\Exception $e) {
-            return FALSE;
+            return false;
         }
 
         return (bool) $this->resource;

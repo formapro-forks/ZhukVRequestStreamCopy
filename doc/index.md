@@ -31,5 +31,5 @@ You can create coket client and web request client with this package.
 
 The following documents are available:
 
-- [Default stream](srteam.md)
+- [Default stream](stream.md)
 - [Stream context](stream_context.md)

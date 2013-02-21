@@ -70,7 +70,7 @@ class ClientSocketTest extends SocketTest
     {
         $socketClient = new SocketClient();
 
-        $this->assertTrue($socketClient instanceof SocketInterface);
+        $this->assertInstanceOf('RequestStream\Stream\Socket\SocketInterface', $socketClient);
 
         $socketClient = $this->createSocketGoogleConnection();
 
@@ -79,10 +79,11 @@ class ClientSocketTest extends SocketTest
         $this->assertTrue(is_resource($socketClient->getResource()));
 
         $writeText = $this->baseWriteHeaderToGoogleConnection();
+
         // Write request
         $writeLength = $socketClient->write($writeText);
 
-        $this->assertEquals($writeLength, strlen($writeText));
+        $this->assertEquals(strlen($writeText), $writeLength);
 
         // Test read
         $this->assertNotNull($socketClient->read());
@@ -109,7 +110,7 @@ class ClientSocketTest extends SocketTest
 
         $socket->shutdown(STREAM_SHUT_WR);
 
-        $this->assertEquals(@$socket->write('foo'), 0);
+        $this->assertEquals(0, @$socket->write('foo'));
 
         $socket->close();
 

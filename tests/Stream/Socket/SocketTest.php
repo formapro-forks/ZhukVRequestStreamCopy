@@ -48,7 +48,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
 
         $socket = $this->createSocket();
         $socket->setTransport($transport);
-        $this->assertEquals($socket->getTransport(), $transport);
+        $this->assertEquals($transport, $socket->getTransport());
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
 
         $socket = $this->createSocket();
         $socket->setPort($port);
-        $this->assertEquals($socket->getPort(), $port);
+        $this->assertEquals($port, $socket->getPort());
     }
 
     /**
@@ -110,7 +110,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
         $socket->setPort($port);
         $socket->setTarget($target);
 
-        $this->assertEquals($socket->getRemoteSocket(), $transport . '://' . $target . ':' . $port);
+        $this->assertEquals($transport . '://' . $target . ':' . $port, $socket->getRemoteSocket());
     }
 
     /**
@@ -141,7 +141,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
 
         $socket = $this->createSocket();
         $socket->setFlag($flag);
-        $this->assertEquals($socket->getFlag(), $flag);
+        $this->assertEquals($flag, $socket->getFlag());
     }
 
     /**
@@ -171,7 +171,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException RuntimeException
      */
     public function testSocketOptionTimeout()
     {
@@ -180,7 +180,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException RuntimeException
      */
     public function testSocketOptionSelectRead()
     {
@@ -189,7 +189,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException RuntimeException
      */
     public function testSocketOptionSelectWrite()
     {
@@ -198,7 +198,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException RuntimeException
      */
     public function testSocketOptionSelectExcept()
     {

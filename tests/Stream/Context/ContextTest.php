@@ -38,8 +38,7 @@ class StreamContextTest extends \PHPUnit_Framework_TestCase
                 foreach ($v as $k1 => $v1) {
                     $context->setOptions($wrapper, $k, $v1);
                 }
-            }
-            else {
+            } else {
                 $context->setOptions($wrapper, $k, $v);
             }
         }
@@ -54,8 +53,7 @@ class StreamContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_resource($context->getDefault()));
 
-        $this->assertTrue($context instanceof StreamInterface);
-        $this->assertTrue($context instanceof ContextInterface);
+        $this->assertInstanceOf('RequestStream\Stream\StreamInterface', $context);
 
         // Test started
         $this->assertFalse($context->is(false));
@@ -101,7 +99,7 @@ class StreamContextTest extends \PHPUnit_Framework_TestCase
                 $v = $v[count($v) - 1];
             }
 
-            $this->assertEquals($setsHttpOptions[$k], $v);
+            $this->assertEquals($v, $setsHttpOptions[$k]);
         }
     }
 }

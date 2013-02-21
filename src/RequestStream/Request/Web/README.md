@@ -4,9 +4,7 @@ Web REQUEST (PHP > 5.3)
 Core Concepts
 -------------
 
-To use the query you want to use this type of query. For example a socket or stream.
 WebAbstratst - is abstract core for sending requests HTTP and HTTPS.
-
 
 Usage
 -----

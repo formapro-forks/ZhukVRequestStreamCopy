@@ -7,13 +7,13 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="true"
+         stopOnFailure="false"
          syntaxCheck="false"
          bootstrap="./tests/bootstrap.php"
 >
-  <testsuites>
-    <testsuite name="Request stream tests">
-      <directory>./tests/</directory>
-    </testsuite>
-  </testsuites>
+    <testsuites>
+        <testsuite name="Request stream tests">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

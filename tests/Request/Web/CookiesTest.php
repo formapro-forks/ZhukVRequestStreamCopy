@@ -5,15 +5,15 @@
  *
  * (c) Vitaliy Zhuk <zhuk2205@gmail.com>
  *
- * For the full copyring and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code
  */
 
 namespace RequestStream\Request\Web;
 
-use RequestStream\Request\Web\CookiesBag,
-    RequestStream\Request\Web\Cookie,
-    RequestStream\Request\ParametersBagInterface;
+use RequestStream\Request\Web\CookiesBag;
+use RequestStream\Request\Web\Cookie;
+use RequestStream\Request\ParametersBagInterface;
 
 /**
  * Cookie, CookiesBag, CookieFilter tests
@@ -27,11 +27,11 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     {
         $cookie = new Cookie('name', 'value');
 
-        $this->assertEquals($cookie->getName(), 'name');
-        $this->assertEquals($cookie->getValue(), 'value');
+        $this->assertEquals('name', $cookie->getName());
+        $this->assertEquals('value', $cookie->getValue());
 
         $this->assertNull($cookie->getExpires());
-        $this->assertEquals($cookie->getPath(), '/');
+        $this->assertEquals('/', $cookie->getPath());
         $this->assertNull($cookie->getDomain());
         $this->assertFalse($cookie->getSecure());
         $this->assertTrue($cookie->getHttpOnly());
@@ -39,8 +39,8 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
         $expires = new \DateTime('now', new \DateTimeZone('UTC'));
         $cookie = new Cookie('name', 'value', $expires, '/', 'example.com', TRUE, FALSE);
 
-        $this->assertEquals($cookie->getExpires(), $expires);
-        $this->assertEquals($cookie->getDomain(), 'example.com');
+        $this->assertEquals($expires, $cookie->getExpires());
+        $this->assertEquals('example.com', $cookie->getDomain());
         $this->assertTrue($cookie->getSecure());
         $this->assertFalse($cookie->getHttpOnly());
     }
@@ -52,10 +52,10 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
     {
         $cookie = Cookie::parseFromString('name=value');
 
-        $this->assertEquals($cookie->getName(), 'name');
-        $this->assertEquals($cookie->getValue(), 'value');
+        $this->assertEquals('name', $cookie->getName());
+        $this->assertEquals('value', $cookie->getValue());
         $this->assertNull($cookie->getExpires());
-        $this->assertEquals($cookie->getPath(), '/');
+        $this->assertEquals('/', $cookie->getPath());
         $this->assertNull($cookie->getDomain());
         $this->assertFalse($cookie->getSecure());
         $this->assertTrue($cookie->getHttpOnly());
@@ -64,14 +64,14 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
 
         $cookie = Cookie::parseFromString('name2=value2; expires=Fri, 31 Dec 2010 23:59:59 GMT; path=/path; domain=example.com');
 
-        $this->assertEquals($cookie->getName(), 'name2');
-        $this->assertEquals($cookie->getValue(), 'value2');
+        $this->assertEquals('name2', $cookie->getName());
+        $this->assertEquals('value2', $cookie->getValue());
         //$expires = new \DateTime('31 Dec 2010 23:59:59 GMT');
         //$this->assertEquals($cookie->getExpires()->format('U'), $expires->format('U'));
         //$this->assertEquals($cookie->getPath(), '/path');
         //$this->assertEquals($cookie->getDomain(), 'example.com');
 
-        $this->assertEquals((string) $cookie, 'name2=value2');
+        $this->assertEquals('name2=value2', (string) $cookie);
     }
 
     /**
@@ -83,19 +83,19 @@ class CookiesTest extends \PHPUnit_Framework_TestCase
 
         $bag['c1'] = 'v1';
 
-        $this->assertEquals(count($bag), 1);
-        $this->assertTrue($bag['c1'] instanceof Cookie);
+        $this->assertEquals(1, count($bag));
+        $this->assertInstanceOf('RequestStream\Request\Web\Cookie', $bag['c1']);
 
         $bag['c2'] = 'v2';
-        $this->assertEquals($bag['c2']->getValue(), 'v2');
-        $this->assertEquals($bag['c2']->getName(), 'c2');
+        $this->assertEquals('v2', $bag['c2']->getValue());
+        $this->assertEquals('c2', $bag['c2']->getName());
 
         $cookie = new Cookie('c3', 'v3');
         $bag[] = $cookie;
-        $this->assertEquals($bag['c3']->getName(), 'c3');
-        $this->assertEquals($bag['c3']->getValue(), 'v3');
+        $this->assertEquals('c3', $bag['c3']->getName());
+        $this->assertEquals('v3', $bag['c3']->getValue());
 
-        $this->assertEquals(str_replace(' ', '', (string) $bag), 'c1=v1;c2=v2;c3=v3');
+        $this->assertEquals('c1=v1;c2=v2;c3=v3', str_replace(' ', '', (string) $bag));
     }
 
     /**

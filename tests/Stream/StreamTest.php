@@ -23,40 +23,78 @@ class StreamAbstractTest extends \PHPUnit_Framework_TestCase
     {
         // Test resolve path
         $this->assertTrue(is_string(StreamAbstract::resolveIncludePath(__FILE__)));
-        $this->assertEquals(StreamAbstract::resolveIncludePath(__FILE__), __FILE__);
+        $this->assertEquals(__FILE__, StreamAbstract::resolveIncludePath(__FILE__));
     }
 
     /**
-     * Test transports
+     * Test get transports
      */
-    public function testTransports()
+    public function testGetTransports()
     {
-        $this->assertTrue(is_array(StreamAbstract::getTransports()));
-        $this->assertEquals(StreamAbstract::getTransports(), stream_get_transports());
-
-        $allowedTransports = StreamAbstract::getTransports();
-
-        foreach ($allowedTransports as $at) {
-            $this->assertTrue(StreamAbstract::isTransport($at));
-        }
-
-        $this->assertFalse(StreamAbstract::isTransport('undefined_transport'));
+        $this->assertEquals(stream_get_transports(), StreamAbstract::getTransports());
     }
 
     /**
-     * Test wrappers
+     * @dataProvider providerTransports
      */
-    public function testWrappers()
+    public function testTransports($transport, $exists)
     {
-        $this->assertTrue(is_array(StreamAbstract::getWrappers()));
-        $this->assertEquals(StreamAbstract::getWrappers(), stream_get_wrappers());
+        if (true === $exists) {
+            $this->assertTrue(StreamAbstract::isTransport($transport));
+        } else {
+            $this->assertFalse(StreamAbstract::isTransport($transport));
+        }
+    }
 
-        $allowedWrappers = StreamAbstract::getWrappers();
+    /**
+     * Provider for test transports
+     */
+    public function providerTransports()
+    {
+        $transports = array();
 
-        foreach ($allowedWrappers as $aw) {
-            $this->assertTrue(StreamAbstract::isWrapper($aw));
+        foreach (StreamAbstract::getTransports() as $transport) {
+            $transports[] = array($transport, true);
         }
 
-        $this->assertFalse(StreamAbstract::isWrapper('undefined_wrapper'));
+        $transports[] = array('undefined_transport', false);
+
+        return $transports;
+    }
+
+    /**
+     * Test get wrappers
+     */
+    public function testGetWrappers()
+    {
+        $this->assertEquals(stream_get_wrappers(), StreamAbstract::getWrappers());
+    }
+
+    /**
+     * @dataProvider providerWrappers
+     */
+    public function testWrappers($wrapper, $exists)
+    {
+        if (true === $exists) {
+            $this->assertTrue(StreamAbstract::isWrapper($wrapper));
+        } else {
+            $this->assertFalse(StreamAbstract::isWrapper($wrapper));
+        }
+    }
+
+    /**
+     * Provider for testing wrappers
+     */
+    public function providerWrappers()
+    {
+        $wrappers = array();
+
+        foreach (StreamAbstract::getWrappers() as $wp) {
+            $wrappers[] = array($wp, true);
+        }
+
+        $wrappers[] = array('undefined_wrapper', false);
+
+        return $wrappers;
     }
 }

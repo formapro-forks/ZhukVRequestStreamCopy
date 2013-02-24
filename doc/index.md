@@ -33,3 +33,5 @@ The following documents are available:
 
 - [Default stream](stream.md)
 - [Stream context](stream_context.md)
+- [Sockets](socket/socket.md)
+- [Socket client](socket/socket_client.md)

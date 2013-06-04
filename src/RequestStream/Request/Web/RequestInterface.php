@@ -47,14 +47,14 @@ interface RequestInterface
     /**
      * Set uri
      *
-     * @param Uri $uri
+     * @param string|Uri $uri
      */
-    public function setUri(Uri $uri);
+    public function setUri($uri);
 
     /**
      * Get uri
      *
-     * @retunr Uri
+     * @return Uri
      */
     public function getUri();
 

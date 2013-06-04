@@ -14,7 +14,7 @@ namespace RequestStream\Stream;
 /**
  * Interface for control context
  */
-interface ContextInterface
+interface ContextInterface extends StreamInterface
 {
     /**
      * Get default options for content
@@ -34,7 +34,6 @@ interface ContextInterface
      * Get params from content
      *
      * @param resource $streamOrContent
-     *
      * @return array
      */
     public function getParams($streamOrContext = null);
@@ -43,7 +42,6 @@ interface ContextInterface
      * Get options from content
      *
      * @param resource $streamOrContext
-     *
      * @return array
      */
     public function getOptions($streamOrContext = null);
@@ -54,8 +52,6 @@ interface ContextInterface
      * @param string $wrapper
      * @param string $paramName
      * @param string $paramValue
-     *
-     * @return null
      */
     public function setOptions($wrapper, $paramName = null,  $paramValue = null);
 

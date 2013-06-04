@@ -40,6 +40,7 @@ class PostRequest extends DefaultRequest
      * Set post data
      *
      * @param PostDataBag $postData
+     * @return PostRequest
      */
     public function setPostData(PostDataBag $postData)
     {
@@ -75,7 +76,7 @@ class PostRequest extends DefaultRequest
     public function prepare()
     {
         parent::prepare();
-        $this->headers['Content-Type'] = 'multipart/form-data; boundary="' . $this->postData->generateBundary() . '"';
+        $this->headers['Content-Type'] = 'multipart/form-data; boundary="' . $this->postData->generateBoundary() . '"';
         $this->headers['Content-Length'] = $this->postData->getContentLength();
     }
 

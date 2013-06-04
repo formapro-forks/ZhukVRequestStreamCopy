@@ -25,6 +25,14 @@ interface ParametersBagInterface extends \Iterator, \Countable, \ArrayAccess
     public function add($name, $value);
 
     /**
+     * Get parameter from bag
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function get($name);
+
+    /**
      * Has parameter in bag
      *
      * @param string $name

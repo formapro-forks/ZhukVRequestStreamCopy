@@ -19,14 +19,9 @@ use RequestStream\Request\ParametersBag;
 class CookiesBag extends ParametersBag
 {
     /**
-     * @var array
+     * {@inheritDoc}
      */
-    protected $_storageReal = array();
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function offsetSet($name, $value)
+    public function add($name, $value)
     {
         if ($name instanceof Cookie) {
             $value = $name;
@@ -37,34 +32,7 @@ class CookiesBag extends ParametersBag
             $value = new Cookie($name, $value);
         }
 
-        $this->_storageReal[$name] = $value;
-
-        return parent::offsetSet($name, $value);
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function offsetGet($name)
-    {
-        return parent::offsetGet(mb_strtolower($name));
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function offsetExists($name)
-    {
-        return parent::offsetExists(strtolower($name));
-    }
-
-    /**
-     * @{inerhitDoc}
-     */
-    public function offsetUnset($name)
-    {
-        unset ($this->_storageReal[$name]);
-        parent::offsetUnset(strtolower($name));
+        return parent::add($name, $value);
     }
 
     /**
@@ -74,7 +42,7 @@ class CookiesBag extends ParametersBag
     {
         $cookies = array();
 
-        foreach ($this->_storageReal as $cookie) {
+        foreach ($this->all() as $cookie) {
             $cookies[] = (string) $cookie;
         }
 

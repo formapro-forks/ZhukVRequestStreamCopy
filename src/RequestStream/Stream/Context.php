@@ -16,7 +16,7 @@ use RequestStream\Stream\StreamAbstract;
 /**
  * Context
  */
-class Context extends StreamAbstract  implements ContextInterface
+class Context extends StreamAbstract implements ContextInterface
 {
     /**
      * {@inheritDoc}
@@ -132,7 +132,11 @@ class Context extends StreamAbstract  implements ContextInterface
             }
         }
 
-        stream_context_set_option($this->getResource(), $wrapper);
+        foreach ($wrapper as $wrapperName => $wrapperParams) {
+            foreach ($wrapperParams as $name => $value) {
+                stream_context_set_option($this->getResource(), $wrapperName, $name, $value);
+            }
+        }
     }
 
     /**
@@ -175,7 +179,7 @@ class Context extends StreamAbstract  implements ContextInterface
                 // Validate of type
                 switch ($type) {
                     case 'integer':
-                        $status = is_int($value) || (is_numeric($value) && strpos($value, '.') !== FALSE);
+                        $status = is_int($value) || (is_numeric($value) && strpos($value, '.') !== false);
                         break;
 
                     case 'float':
@@ -204,7 +208,7 @@ class Context extends StreamAbstract  implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    final public static function getAllowedOptionsContext($wrapper = NULL)
+    final public static function getAllowedOptionsContext($wrapper = null)
     {
         $wrappers = array(
             // Options for HTTP Context

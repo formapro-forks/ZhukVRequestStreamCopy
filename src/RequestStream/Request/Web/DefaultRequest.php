@@ -56,7 +56,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setHeaders(HeadersBag $headers)
     {
@@ -66,7 +66,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getHeaders()
     {
@@ -74,7 +74,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setCookies(CookiesBag $cookies)
     {
@@ -84,7 +84,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getCookies()
     {
@@ -92,17 +92,21 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
-    public function setUri(Uri $uri)
+    public function setUri($uri)
     {
-        $this->uri = $uri;
+        if ($uri instanceof Uri) {
+            $this->uri = $uri;
+        } else {
+            $this->uri = Uri::parseFromString($uri);
+        }
 
         return $this;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getUri()
     {
@@ -110,7 +114,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setProxy(Proxy $proxy)
     {
@@ -120,7 +124,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getProxy()
     {
@@ -128,7 +132,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setMethod($method)
     {
@@ -148,7 +152,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getMethod()
     {
@@ -156,7 +160,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setHttpVersion($httpVersion)
     {
@@ -166,7 +170,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getHttpVersion()
     {
@@ -174,7 +178,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function prepare()
     {

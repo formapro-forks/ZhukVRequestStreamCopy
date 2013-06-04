@@ -63,8 +63,7 @@ interface ResultInterface
      *
      * @param string $content
      * @param float $useTime
-     *
      * @return ResultInterface
      */
-    static public function parseFromContent($content, $useTime = null);
+    public static function parseFromContent($content, $useTime = null);
 }

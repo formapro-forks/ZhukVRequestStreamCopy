@@ -19,7 +19,7 @@ interface WebInterface
     /**
      * Set request
      *
-     * @param RequestInterface $data
+     * @param RequestInterface $request
      */
     public function setRequest(RequestInterface $request);
 

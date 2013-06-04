@@ -27,7 +27,7 @@ Composer will install the bundle to your project's `vendor/request-stream` direc
 
 ## Next steps:
 
-You can create coket client and web request client with this package.
+You can create socket client and web request client with this package.
 
 The following documents are available:
 
@@ -35,3 +35,4 @@ The following documents are available:
 - [Stream context](stream_context.md)
 - [Sockets](socket/socket.md)
 - [Socket client](socket/socket_client.md)
+- [Web request](request/web.md)

@@ -26,7 +26,7 @@ class PostDataBag extends ParametersBag
     /**
      * {@inheritDoc}
      */
-    public function offsetSet($offset, $value)
+    public function add($offset, $value)
     {
         if (!$value instanceof PostData) {
             $value = new PostData($offset, $value);
@@ -35,18 +35,18 @@ class PostDataBag extends ParametersBag
         // Reset boundary
         $this->boundary = null;
 
-        return parent::offsetSet($offset, $value);
+        return parent::add($offset, $value);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function offsetUnset($offset)
+    public function remove($offset)
     {
         // Reset boundary
         $this->boundary = null;
 
-        return parent::offsetUnset($offset);
+        return parent::remove($offset);
     }
 
     /**
@@ -54,7 +54,7 @@ class PostDataBag extends ParametersBag
      *
      * @return string
      */
-    public function generateBundary()
+    public function generateBoundary()
     {
         if ($this->boundary) {
             return $this->boundary;
@@ -71,11 +71,11 @@ class PostDataBag extends ParametersBag
         $postData = "\r\n";
 
         foreach ($this->_storage as $postKey => $postValue) {
-            $postData .= '--' . $this->generateBundary() . "\n" .
+            $postData .= '--' . $this->generateBoundary() . "\n" .
                 ((string) $postValue) . "\r\n";
         }
 
-        $postData .= '--' . $this->generateBundary() . '--';
+        $postData .= '--' . $this->generateBoundary() . '--';
 
         return $postData;
     }

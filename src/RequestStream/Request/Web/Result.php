@@ -112,7 +112,7 @@ class Result implements ResultInterface
     /**
      * {@inheritDoc}
      */
-    static public function parseFromContent($content, $requestTime = null)
+    public static function parseFromContent($content, $requestTime = null)
     {
         $content = explode("\r\n\r\n", $content, 2);
 

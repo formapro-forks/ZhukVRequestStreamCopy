@@ -20,8 +20,8 @@ class UserAgentGenerator
      * Generate random user agent
      *
      * @param string $browser
-     *
-     * @return srtring
+     * @throws \InvalidArgumentException
+     * @return string
      */
     public static function generateUserAgent($browser = null)
     {
@@ -47,6 +47,7 @@ class UserAgentGenerator
                 if (strtolower($ab) == strtolower($browser)) {
                     $browser = $ab;
                     $notBrowser = false;
+                    break;
                 }
             }
 
@@ -57,10 +58,10 @@ class UserAgentGenerator
                 ));
             }
         } else {
-            $type = $allowedBrowser[array_rand($allowedBrowser)];
+            $browser = $allowedBrowser[array_rand($allowedBrowser)];
         }
 
-        switch ($type){
+        switch ($browser){
             case 'Firefox':
                 // Generate Mozilla Firefox agent
                 $version = array(
@@ -71,9 +72,9 @@ class UserAgentGenerator
                 );
 
                 $platforms = array(
-                  '(Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . '; ' . $lang[array_rand($lang, 1)] . '; rv:1.9.' . rand(0, 2) . '.20) Gecko/' . $ver[array_rand($ver, 1)],
-                  '(X11; Linux ' . $linuxProc[array_rand($linuxProc, 1)] . '; rv:' . rand(5, 7) . '.0) Gecko/' . $ver[array_rand($ver, 1)],
-                  '(Macintosh; ' . $macProc[array_rand($macProc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ' rv:' . rand(2, 6) . '.0) Gecko/' . $ver[array_rand($ver, 1)]
+                  '(Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . '; ' . $lang[array_rand($lang, 1)] . '; rv:1.9.' . rand(0, 2) . '.20) Gecko/' . $version[array_rand($version, 1)],
+                  '(X11; Linux ' . $linuxProc[array_rand($linuxProc, 1)] . '; rv:' . rand(5, 7) . '.0) Gecko/' . $version[array_rand($version, 1)],
+                  '(Macintosh; ' . $macProc[array_rand($macProc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ' rv:' . rand(2, 6) . '.0) Gecko/' . $version[array_rand($version, 1)]
                 );
 
                 $ua = "Mozilla/5.0 " . $platforms[array_rand($platforms, 1)];
@@ -87,8 +88,8 @@ class UserAgentGenerator
                         : $ver = rand(4, 5) . '.0.' . rand(1, 5);
 
                 $platforms = array(
-                    '(Windows; U; Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/{$ver} Safari/{$saf}",
-                    '(Macintosh; U; ' . $macProc[array_rand($macProc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ' rv:' . rand(2, 6) . '.0; ' . $lang[array_rand($lang, 1)] . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/{$ver} Safari/{$saf}",
+                    '(Windows; U; Windows NT ' . rand(5, 6) . '.' . rand(0, 1) . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/{$version} Safari/{$version}",
+                    '(Macintosh; U; ' . $macProc[array_rand($macProc, 1)] . ' Mac OS X 10_' . rand(5, 7) . '_' . rand(0, 9) . ' rv:' . rand(2, 6) . '.0; ' . $lang[array_rand($lang, 1)] . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/{$version} Safari/{$saf}",
                     '(iPod; U; CPU iPhone OS ' . rand(3, 4) . '_' . rand(0, 3) . ' like Mac OS X; ' . $lang[array_rand($lang, 1)] . ") AppleWebKit/{$saf} (KHTML, like Gecko) Version/" . rand(3, 4) . ".0.5 Mobile/8B" . rand(111, 119) . " Safari/6{$saf}",
                 );
 
@@ -125,6 +126,9 @@ class UserAgentGenerator
 
                 $ua = 'Mozilla/5.0' . $platforms[array_rand($platforms, 1)];
                 break;
+
+            default:
+                throw new \RuntimeException(sprintf('Undefined browser "%s".', $browser));
         }
 
         return $ua;

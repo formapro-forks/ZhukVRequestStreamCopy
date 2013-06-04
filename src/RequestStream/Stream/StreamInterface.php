@@ -66,9 +66,9 @@ interface StreamInterface
      * @param array &$write
      * @param array &$except
      * @param integer $seconds
-     * @param integer $useconds
+     * @param integer $uSec
      */
-    public static function select(array &$read = null, array &$write = null, array &$except = null, $sec = 1, $usec = 0);
+    public static function select(array &$read = null, array &$write = null, array &$except = null, $sec = 1, $uSec = 0);
 
     /**
      * Is created stream

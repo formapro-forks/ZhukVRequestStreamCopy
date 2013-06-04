@@ -11,14 +11,10 @@
 
 namespace RequestStream\Request\Web;
 
-use RequestStream\Request\Exception\UriException;
-use RequestStream\Request\Exception\HeadersException;
 use RequestStream\Request\Exception\RequestException;
 use RequestStream\Request\Exception\ResultException;
 use RequestStream\Request\Exception\RedirectException;
-use RequestException\Request\Exception\XmlDataException;
 use RequestStream\Request\Web\Result;
-use RequestStream\Stream\Context\Context;
 
 /**
  * Abstract core for web request
@@ -29,11 +25,6 @@ abstract class WebAbstract implements WebInterface
      * @var RequestInterface
      */
     protected $request;
-
-    /**
-     * @var DOMDocument
-     */
-    protected $xmlData;
 
     /**
      * @var string
@@ -49,6 +40,11 @@ abstract class WebAbstract implements WebInterface
      * @var integer
      */
     protected $countRedirect = 5;
+
+    /**
+     * @var integer
+     */
+    protected $countUseRedirect = 0;
 
     /**
      * @var boolean
@@ -88,19 +84,7 @@ abstract class WebAbstract implements WebInterface
     }
 
     /**
-     * Get XML data
-     *
-     * @return \DOMDocument
-     */
-    public function getXmlData()
-    {
-        return $this->xmlData;
-    }
-
-    /**
-     * Set count redirect
-     *
-     * @param integer $count
+     * {@inheritDoc}
      */
     public function setCountRedirect($count = 0)
     {
@@ -110,9 +94,7 @@ abstract class WebAbstract implements WebInterface
     }
 
     /**
-     * Set use redirect cookie
-     *
-     * @param bool $status
+     * {@inheritDoc}
      */
     public function setRedirectCookie($status = true)
     {
@@ -138,6 +120,10 @@ abstract class WebAbstract implements WebInterface
             throw new RequestException('Can\'t send request to remote address. Undefined request data.');
         }
 
+        if (!$this->request->getUri()) {
+            throw new RequestException('Can\'t send request to remove address. Undefined request URI.');
+        }
+
         if ($this->result && !$reset) {
             return $this->result;
         }
@@ -147,7 +133,7 @@ abstract class WebAbstract implements WebInterface
             $this->countUseRedirect = 0;
         }
 
-        // Create request
+        /** @var Result $webResult */
         $webResult = $this->createRequest();
 
         if (!$webResult instanceof ResultInterface) {
@@ -184,17 +170,25 @@ abstract class WebAbstract implements WebInterface
 
         $countRedirects++;
 
-        $this->heders['Referer'] = $refererUri = $this->request->getUri();
+        $refererUri = (string) $this->request->getUri();
+
+        $this->request->getHeaders()->add('Referer', $refererUri);
 
         // Generate and set location
         $locationTo = $this->result->headers['Location'];
 
         if (strpos($locationTo, '/') === 0) {
-            $locationTo = $this->uri->getDomain() . $locationTo;
-        } else if (strpos($locationTo, 'http') === false) {
-            $locationTo = $this->uri->getDomain() .
-                rtrim($this->uri->getPath(), '/') .
-                '/' . $locationTo;
+            /** @var Uri $requestUri */
+            $requestUri = $this->request->getUri();
+            $locationTo = $requestUri->getDomain() . $locationTo;
+        } else if (strpos($locationTo, 'http') !== 0) {
+            /** @var Uri $requestUri */
+            $requestUri = $this->request->getUri();
+
+            $path = explode('/', $requestUri->getPath());
+            array_pop($path);
+
+            $locationTo = $requestUri->getDomain() . '/' . ltrim(implode('/', $path), '/') . $locationTo;
         }
 
         $requestData = new DefaultRequest;
@@ -205,6 +199,7 @@ abstract class WebAbstract implements WebInterface
             $cookieFilter = new CookieFilter($this->result->getCookies());
             $cookieBag = $this->request->getCookies();
 
+            /** @var Cookie $cookie */
             foreach ($cookieFilter as $cookie) {
                 $cookieBag[$cookie->getName()] = $cookie;
             }

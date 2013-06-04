@@ -19,14 +19,9 @@ use RequestStream\Request\ParametersBag;
 class HeadersBag extends ParametersBag
 {
     /**
-     * @var array
-     */
-    protected $_storageReal = array();
-
-    /**
      * {@inheritDoc}
      */
-    public function offsetSet($name, $value)
+    public function add($name, $value)
     {
         if (is_object($value) && !$value instanceof CookiesBag) {
             if (!method_exists($value, '__toString')) {
@@ -61,34 +56,56 @@ class HeadersBag extends ParametersBag
             $value = Uri::parseFromString($value);
         }
 
-        $this->_storageReal[$name] = $value;
-
-        return parent::offsetSet($nameLower, $value);
+        return parent::add($name, $value);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function offsetGet($name)
+    public function get($name)
     {
-        return parent::offsetGet(mb_strtolower($name));
+        return parent::get($this->searchKey($name));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function offsetExists($name)
+    public function has($name)
     {
-        return parent::offsetExists(strtolower($name));
+        return parent::has($this->searchKey($name));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function offsetUnset($name)
+    public function remove($name)
     {
-        unset ($this->_storageReal[$name]);
-        parent::offsetUnset(strtolower($name));
+        return parent::remove($this->searchKey($name));
+    }
+
+    /**
+     * Search key
+     *
+     * @param string $key
+     * @return string
+     */
+    protected function searchKey($key)
+    {
+        // Key already exists
+        if (isset($this->_storage[$key])) {
+            return $key;
+        }
+
+        // Lower all keys and check equals
+        foreach ($this->all() as $keyName => $value) {
+            if ($keyName != $key) {
+                if (mb_strtolower($keyName) == mb_strtolower($key)) {
+                    return $keyName;
+                }
+            }
+        }
+
+        return $key;
     }
 
     /**
@@ -98,7 +115,7 @@ class HeadersBag extends ParametersBag
     {
         $headerStr = '';
 
-        foreach ($this->_storageReal as $headerName => $headerValue) {
+        foreach ($this->all() as $headerName => $headerValue) {
             $headerStr .= $headerName . ': ' . $headerValue . "\n";
         }
 

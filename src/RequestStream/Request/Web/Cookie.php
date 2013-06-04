@@ -22,7 +22,7 @@ class Cookie
     protected $name;
 
     /**
-     * @var value
+     * @var mixed
      */
     protected $value;
 
@@ -146,8 +146,7 @@ class Cookie
     /**
      * Parse cookie from string
      *
-     * @param string $cookie
-     *
+     * @param $cookieStr
      * @return Cookie
      */
     static public function parseFromString($cookieStr)

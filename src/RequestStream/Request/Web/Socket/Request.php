@@ -22,7 +22,7 @@ use RequestStream\Request\Web\Result;
 class Request extends WebAbstract implements RequestInterface
 {
     /**
-     * @var resource
+     * @var SocketClient
      */
     protected $socket;
 
@@ -104,19 +104,6 @@ class Request extends WebAbstract implements RequestInterface
 
         // Generate result
         return Result::parseFromContent($this->socket->read(), microtime(true) - $useTime);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function prepareHeaders()
-    {
-        parent::prepareHeaders();
-
-        if (count($this->postData)) {
-            // If added content length header, must be deleted!
-            unset ($this->headers['Content-Length']);
-        }
     }
 
     /**

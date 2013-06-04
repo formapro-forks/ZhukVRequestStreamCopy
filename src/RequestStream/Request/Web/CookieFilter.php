@@ -44,10 +44,12 @@ class CookieFilter extends \FilterIterator
     /**
      * Construct
      *
-     * @param
+     * @param \Iterator $iterator
      * @param string $path
      * @param string $domain
      * @param \DateTime $expires
+     * @param bool $secure
+     * @param bool $httpOnly
      */
     public function __construct(\Iterator $iterator, $path = null, $domain = null, \DateTime $expires = null, $secure = null, $httpOnly = null)
     {

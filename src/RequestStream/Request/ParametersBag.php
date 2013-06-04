@@ -86,7 +86,7 @@ class ParametersBag implements ParametersBagInterface
      */
     public function offsetExists($offset)
     {
-        return isset($this->_storage[$offset]);
+        return $this->has($offset);
     }
 
     /**
@@ -94,7 +94,7 @@ class ParametersBag implements ParametersBagInterface
      */
     public function offsetGet($offset)
     {
-        return $this->_storage[$offset];
+        return $this->get($offset);
     }
 
     /**
@@ -102,7 +102,7 @@ class ParametersBag implements ParametersBagInterface
      */
     public function offsetSet($offset, $value)
     {
-        $this->_storage[$offset] = $value;
+        $this->add($offset, $value);
     }
 
     /**
@@ -110,35 +110,47 @@ class ParametersBag implements ParametersBagInterface
      */
     public function offsetUnset($offset)
     {
-        unset ($this->_storage[$offset]);
+        $this->remove($offset);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
+     */
+    public function get($name)
+    {
+        return $this->_storage[$name];
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function add($name, $value)
     {
-        return $this->offsetSet($name, $value);
+        $this->_storage[$name] = $value;
+
+        return $this;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function has($name)
     {
-        return $this->offsetExists($name);
+        return isset($this->_storage[$name]);
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function remove($name)
     {
-        return $this->offsetUnset($name);
+        unset ($this->_storage[$name]);
+
+        return $this;
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function removeAll()
     {
@@ -146,7 +158,7 @@ class ParametersBag implements ParametersBagInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function all()
     {

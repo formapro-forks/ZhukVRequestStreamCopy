@@ -11,6 +11,8 @@
 
 namespace RequestStream\Request\Web;
 
+use RequestStream\Request\Exception\UriException;
+
 /**
  * URI Core
  */
@@ -69,10 +71,10 @@ class Uri
      * Parse from string
      *
      * @param string $url
-     *
+     * @throws \RequestStream\Request\Exception\UriException
      * @return Uri
      */
-    static public function parseFromString($url)
+    public static function parseFromString($url)
     {
         if (preg_match('/^([a-z]{0,5}):\/\//', $url, $tmp)) {
             if (!in_array($tmp[1], array('http', 'https'))) {
@@ -83,11 +85,11 @@ class Uri
         }
 
         if (!$parseUri = @parse_url($url)) {
-            throw new \InvalidArgumentException(sprintf('Can\'t parse uri "%s". Please check uri!', $url));
+            throw new UriException(sprintf('Can\'t parse uri "%s". Please check uri!', $url));
         }
 
         if (strpos($parseUri['host'], '.') === FALSE) {
-            throw new \InvalidArgumentException(sprintf('Can\'t parse uri "%s". Undefined host.', $url));
+            throw new UriException(sprintf('Can\'t parse uri "%s". Undefined host.', $url));
         }
 
         if (isset($parseUri['query'])) {
@@ -202,7 +204,7 @@ class Uri
     }
 
     /**
-     * Get domain with shceme
+     * Get domain with scheme
      *
      * @return string
      */

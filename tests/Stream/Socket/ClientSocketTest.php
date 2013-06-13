@@ -32,7 +32,9 @@ class ClientSocketTest extends SocketTest
         return array(
             STREAM_CLIENT_CONNECT,
             STREAM_CLIENT_ASYNC_CONNECT,
-            STREAM_CLIENT_PERSISTENT
+            STREAM_CLIENT_PERSISTENT,
+            (STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT),
+            (STREAM_CLIENT_CONNECT|STREAM_CLIENT_ASYNC_CONNECT),
         );
     }
 

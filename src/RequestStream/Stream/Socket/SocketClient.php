@@ -33,7 +33,15 @@ class SocketClient extends Socket implements SocketClientInterface
      */
     public function setFlag($flag)
     {
-        if (!in_array($flag, array(STREAM_CLIENT_CONNECT, STREAM_CLIENT_ASYNC_CONNECT, STREAM_CLIENT_PERSISTENT))) {
+        $validFlags = array(
+            STREAM_CLIENT_CONNECT,
+            STREAM_CLIENT_ASYNC_CONNECT,
+            STREAM_CLIENT_PERSISTENT,
+            (STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT),
+            (STREAM_CLIENT_CONNECT|STREAM_CLIENT_ASYNC_CONNECT),
+        );
+
+        if (!in_array($flag, $validFlags)) {
             throw new \InvalidArgumentException('Undefined flags in own system. Please check flags.');
         }
 

@@ -102,9 +102,4 @@ abstract class StreamAbstract implements StreamInterface
 
         return $this->resource;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    abstract function create();
 }

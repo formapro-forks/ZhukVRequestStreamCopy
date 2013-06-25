@@ -22,14 +22,13 @@ interface SocketInterface
      * Add context to socket
      *
      * @param ContextInterface $context
-     *
-     * @return this object
      */
     public function setContext(ContextInterface $context);
 
     /**
      * Get context
      *
+     * @param resource $originalResource
      * @return ContextInterface
      */
     public function getContext($originalResource);
@@ -63,7 +62,7 @@ interface SocketInterface
     public function getTarget();
 
     /**
-     * Set posrt for open socket
+     * Set port for open socket
      *
      * @param int $port
      */

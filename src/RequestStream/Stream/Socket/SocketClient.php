@@ -29,7 +29,7 @@ class SocketClient extends Socket implements SocketClientInterface
     protected $flag = STREAM_CLIENT_CONNECT;
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function setFlag($flag)
     {
@@ -51,7 +51,7 @@ class SocketClient extends Socket implements SocketClientInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function getFlag()
     {
@@ -59,7 +59,7 @@ class SocketClient extends Socket implements SocketClientInterface
     }
 
     /**
-     * @{inerhitDoc}
+     * {@inheritDoc}
      */
     public function create()
     {

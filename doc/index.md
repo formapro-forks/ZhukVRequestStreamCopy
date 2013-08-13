@@ -35,4 +35,5 @@ The following documents are available:
 - [Stream context](stream_context.md)
 - [Sockets](socket/socket.md)
 - [Socket client](socket/socket_client.md)
+- [Socket server](socket/socket_server.md)
 - [Web request](request/web.md)

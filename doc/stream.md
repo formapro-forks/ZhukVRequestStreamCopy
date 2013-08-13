@@ -6,7 +6,7 @@ You can create stream connection with use this component.
 Stream allowed:
 
 * Context
-* Socket
+* Socket (Client and server)
 
 [Documentation in php.net](http://www.php.net/manual/ref.stream.php)
 

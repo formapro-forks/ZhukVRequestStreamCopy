@@ -14,6 +14,6 @@ namespace RequestStream\Stream\Socket;
 /**
  * Interface for control socket client
  */
-interface SocketClientInterface
+interface SocketClientInterface extends SocketInterface
 {
 }

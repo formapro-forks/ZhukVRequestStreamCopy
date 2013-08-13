@@ -68,14 +68,16 @@ class SocketClient extends Socket implements SocketClientInterface
         }
 
         if ($this->context) {
+            // Create socket client with context
             $resource = stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag, $this->getContext(true));
         } else {
+            // Create socket client without context
             $resource = stream_socket_client($this->getRemoteSocket(), $errorCode, $errorStr, ini_get('default_socket_timeout'), $this->flag);
         }
 
         if (!$resource) {
             if (!$errorCode && !$errorStr) {
-                throw new SocketErrorException('Socket not create. Technical error in system.', 0);
+                throw new SocketErrorException('Socket client not created. Technical error in system.', 0);
             } else {
                 throw new SocketErrorException($errorCode . ': ' . $errorStr, $errorCode);
             }

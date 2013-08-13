@@ -19,7 +19,7 @@ abstract class StreamAbstract implements StreamInterface
     /**
      * @var resource
      */
-    protected $resource = NULL;
+    protected $resource;
 
     /**
      * {@inheritDoc}

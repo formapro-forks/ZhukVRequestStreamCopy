@@ -78,9 +78,9 @@ interface SocketInterface
     /**
      * Set flag for open socket
      *
-     * @param int $flags
+     * @param int $flag
      */
-    public function setFlag($flags);
+    public function setFlag($flag);
 
     /**
      * Get flags for open socket

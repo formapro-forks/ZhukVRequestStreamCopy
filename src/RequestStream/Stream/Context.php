@@ -124,7 +124,7 @@ class Context extends StreamAbstract implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public final function validateOptionsContext($wrapper, array $options)
+    final public function validateOptionsContext($wrapper, array $options)
     {
         $allowedOptions = self::getAllowedOptionsContext($wrapper);
 

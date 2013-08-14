@@ -12,11 +12,12 @@
 namespace RequestStream\Stream\Socket;
 
 use RequestStream\Stream\ContextInterface;
+use RequestStream\Stream\StreamInterface;
 
 /**
  * Interface for control socket client
  */
-interface SocketInterface
+interface SocketInterface extends StreamInterface
 {
     /**
      * Add context to socket

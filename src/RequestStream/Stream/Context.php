@@ -61,9 +61,9 @@ class Context extends StreamAbstract implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function create(array $options = array(), array $params = array())
+    public function create()
     {
-        $this->resource = stream_context_create($options, $params);
+        $this->resource = stream_context_create();
 
         if (!$this->resource) {
             throw new \RuntimeException('Can\'t create context.');

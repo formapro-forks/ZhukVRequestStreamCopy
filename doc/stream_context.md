@@ -9,7 +9,7 @@ Context class: `RequestStream\Stream\Context`
 [Context](http://php.net/manual/en/context.php)
 [Context stream functions](http://www.php.net/manual/en/ref.stream.php)
 
-Context object instace of [AbstractStream](stream.md).
+Context object instance of [AbstractStream](stream.md).
 
 ### Working with context:
 
@@ -110,7 +110,7 @@ $resource = $context->getResource();
 
 **Attention:**
 
-> Method `getResource` - auto created context resource, if resource not found.
+> Method `getResource`, `setOptions`, `setParameter` - auto created context resource, if resource not found.
 
 Example:
 

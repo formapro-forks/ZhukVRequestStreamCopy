@@ -61,12 +61,4 @@ interface ContextInterface extends StreamInterface
      * @param array $params
      */
     public function setParams(array $params);
-
-    /**
-     * Create stream of context
-     *
-     * @param array $options
-     * @param array $params
-     */
-    public function create(array $options = array(), array $params = array());
 }

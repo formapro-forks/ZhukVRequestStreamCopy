@@ -11,20 +11,18 @@
 
 namespace RequestStream\Request\Web\Socket;
 
+use RequestStream\Request\Web\WebInterface;
+
 /**
  * Interface for control socket request
  */
-interface RequestInterface
+interface RequestInterface extends WebInterface
 {
     /**
      * Set bind to
      *    Set other IP and port for request in our system
      *
-     * @param string $ip
-     *    Ip and port for connext
-     *    Must be mask: ip:port
-     *    Can use IPv4 and IPv6
-     *
+     * @param string $bindto
      * @see http://www.php.net/manual/en/context.socket.php
      */
     public function setBindTo($bindto);

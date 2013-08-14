@@ -75,33 +75,6 @@ class Context extends StreamAbstract implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function is($autoload = false, array $options = array())
-    {
-        if (!$autoload) {
-            return (bool) $this->resource;
-        }
-
-        try {
-            if (is_resource($this->resource)) {
-              return true;
-            }
-
-            $options += array(
-                'options' => array(),
-                'params' => array()
-            );
-
-            $this->create($options['options'], $options['params']);
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return (bool) $this->resource;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setOptions($wrapper, $paramName = null,  $paramValue = null)
     {
         if (is_array($wrapper)) {

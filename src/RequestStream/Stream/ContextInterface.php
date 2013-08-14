@@ -63,14 +63,6 @@ interface ContextInterface extends StreamInterface
     public function setParams(array $params);
 
     /**
-     * Is created content
-     *
-     * @param bool $autoload
-     * @param array $options
-     */
-    public function is($autoload = false, array $options = array());
-
-    /**
      * Create stream of context
      *
      * @param array $options

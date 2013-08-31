@@ -9,13 +9,18 @@
  * file that was distributed with this source code
  */
 
-namespace RequestStream\Request\Web\Socket;
+namespace RequestStream\Request\Web\ContentDataCompiler;
 
 /**
- * Interface for control socket request
- *
- * @deprecated
+ * Native compiler
  */
-interface RequestInterface extends ConnectionInterface
+class NativeCompiler implements CompilerInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function compile($data)
+    {
+        return $data;
+    }
 }

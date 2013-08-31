@@ -11,6 +11,8 @@
 
 namespace RequestStream\Request\Web;
 
+use RequestStream\Request\Web\ContentDataCompiler\CompilerFactory;
+
 /**
  * Default request
  */
@@ -45,6 +47,21 @@ class DefaultRequest implements RequestInterface
      * @var Proxy
      */
     protected $proxy;
+
+    /**
+     * @var mixed
+     */
+    protected $contentData;
+
+    /**
+     * @var bool
+     */
+    protected $autoContentType = true;
+
+    /**
+     * @var string
+     */
+    protected $contentDataCompiler;
 
     /**
      * Construct
@@ -134,6 +151,64 @@ class DefaultRequest implements RequestInterface
     /**
      * {@inheritDoc}
      */
+    public function setContentData($contentData, $compiler = null)
+    {
+        $this->contentData = $contentData;
+
+        if (null !== $compiler) {
+            $this->contentDataCompiler = $compiler;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentData()
+    {
+        return $this->contentData;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAutoContentType($auto = true)
+    {
+        $this->autoContentType = (bool) $auto;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAutoContentType()
+    {
+        return $this->autoContentType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContentDataCompiler($compiler)
+    {
+        $this->contentDataCompiler = $compiler;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContentDataCompiler()
+    {
+        return $this->contentDataCompiler;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setMethod($method)
     {
         $method = strtoupper($method);
@@ -191,6 +266,19 @@ class DefaultRequest implements RequestInterface
         if (count($this->cookies)) {
             $this->headers['Cookie'] = $this->cookies;
         }
+
+        // Check content data type
+        if ($this->contentData && $this->autoContentType) {
+            if (!isset($this->headers['Content-Type'])) {
+                if ($this->contentData instanceof \DOMDocument) {
+                    $this->headers['Content-Type'] = 'application/xml';
+                } else if ($this->contentData instanceof \JsonSerializable) {
+                    $this->headers['Content-Type'] = 'application/json';
+                } else if (is_string($this->contentData)) {
+                    $this->headers['Content-Type'] = 'text/plain';
+                }
+            }
+        }
     }
 
     /**
@@ -204,9 +292,16 @@ class DefaultRequest implements RequestInterface
 
         $this->prepare();
 
+        if ($this->contentData) {
+            $contentData = CompilerFactory::compile($this->contentDataCompiler, $this->contentData);
+        } else {
+            $contentData = null;
+        }
+
         return $this->method . ' ' . ($this->uri->getPath() . ($this->uri->getQuery() ? '?' . implode('&', $this->uri->getQuery()) : '')) . ' HTTP/' . $this->httpVersion .  "\r\n" .
             'Host: ' . $this->uri->getHost() . "\r\n".
             ((string) $this->headers) .
-            "\r\n\r\n";
+            "\r\n\r\n" .
+            ($contentData ? trim($contentData) . "\r\n\r\n" : '');
     }
 }

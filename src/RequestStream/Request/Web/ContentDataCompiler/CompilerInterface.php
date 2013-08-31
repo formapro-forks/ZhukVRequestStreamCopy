@@ -9,13 +9,15 @@
  * file that was distributed with this source code
  */
 
-namespace RequestStream\Request\Web\Socket;
+namespace RequestStream\Request\Web\ContentDataCompiler;
 
-/**
- * Interface for control socket request
- *
- * @deprecated
- */
-interface RequestInterface extends ConnectionInterface
+interface CompilerInterface
 {
+    /**
+     * Compile data to string
+     *
+     * @param mixed $data
+     * @return string
+     */
+    public function compile($data);
 }

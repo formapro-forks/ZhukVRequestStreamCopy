@@ -9,13 +9,8 @@
  * file that was distributed with this source code
  */
 
-namespace RequestStream\Request\Web\Socket;
+namespace RequestStream\Request\Exception;
 
-/**
- * Interface for control socket request
- *
- * @deprecated
- */
-interface RequestInterface extends ConnectionInterface
+class IncorrectContentDataException extends \Exception
 {
 }

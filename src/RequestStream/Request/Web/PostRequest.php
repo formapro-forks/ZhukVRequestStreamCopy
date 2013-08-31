@@ -64,10 +64,18 @@ class PostRequest extends DefaultRequest
      */
     public function setMethod($method)
     {
-        throw new \RuntimeException(sprintf(
+        throw new \BadMethodCallException(sprintf(
             'Can\'t set HTTP method ("%s") to POST Request.',
             $method
         ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContentData($contentData)
+    {
+        throw new \BadMethodCallException('Can\'t set content data to post request.');
     }
 
     /**

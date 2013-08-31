@@ -87,6 +87,49 @@ interface RequestInterface
     public function getMethod();
 
     /**
+     * Set content data
+     *
+     * @param mixed $contentData
+     * @param null|string|ContentDataCompiler\CompilerInterface $compiler
+     */
+    public function setContentData($contentData, $compiler = null);
+
+    /**
+     * Get content data
+     *
+     * @return mixed
+     */
+    public function getContentData();
+
+    /**
+     * Set auto generate content type
+     *
+     * @param bool $status
+     */
+    public function setAutoContentType($status);
+
+    /**
+     * Get status of auto generate content type
+     *
+     * @return bool
+     */
+    public function getAutoContentType();
+
+    /**
+     * Set content data compiler
+     *
+     * @param string|ContentDataCompiler\CompilerInterface $compiler
+     */
+    public function setContentDataCompiler($compiler);
+
+    /**
+     * Get content data compiler
+     *
+     * @return mixed
+     */
+    public function getContentDataCompiler();
+
+    /**
      * Set Http version
      *
      * @param string $version

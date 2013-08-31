@@ -97,9 +97,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         try {
             $request->setMethod('GET');
             $this->fail('Not control set method in PostRequest');
-        }
-        catch (\RuntimeException $e)
-        {
+        } catch (\BadMethodCallException $e) {
         }
 
         // Prepare test

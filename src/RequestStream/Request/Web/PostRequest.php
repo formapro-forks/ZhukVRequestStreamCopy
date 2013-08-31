@@ -73,9 +73,25 @@ class PostRequest extends DefaultRequest
     /**
      * {@inheritDoc}
      */
-    public function setContentData($contentData)
+    public function setContentData($contentData, $compiler = null)
     {
         throw new \BadMethodCallException('Can\'t set content data to post request.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setContentDataCompiler($compiler)
+    {
+        throw new \BadMethodCallException('Can\'t set content data compiler to post request. Content data is disabled in this request.');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAutoContentType($status)
+    {
+        throw new \BadMethodCallException('Can\'t set auto generated content data status to post request. Content data is disabled in this request.');
     }
 
     /**

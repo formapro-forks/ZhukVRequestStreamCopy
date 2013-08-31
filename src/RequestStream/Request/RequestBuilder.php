@@ -59,6 +59,11 @@ class RequestBuilder
     private $contentData;
 
     /**
+     * @var bool
+     */
+    private $autoContentType = true;
+
+    /**
      * @var string
      */
     private $contentDataCompiler;
@@ -136,6 +141,7 @@ class RequestBuilder
      *
      * @param string $name
      * @param mixed $value
+     * @return RequestBuilder
      */
     public function addPostData($name, $value = null)
     {
@@ -144,6 +150,8 @@ class RequestBuilder
         if (!$this->method) {
             $this->method = 'POST';
         }
+
+        return $this;
     }
 
     /**
@@ -183,6 +191,32 @@ class RequestBuilder
     {
         $this->contentData = $contentData;
         $this->contentDataCompiler = $compiler;
+
+        return $this;
+    }
+
+    /**
+     * Set auto content type
+     *
+     * @param bool $status
+     * @return RequestBuilder
+     */
+    public function setAutoContentType($status = true)
+    {
+        $this->autoContentType = (bool) $status;
+
+        return $this;
+    }
+
+    /**
+     * Set content data compiler
+     *
+     * @param string $compiler
+     * @return RequestBuilder
+     */
+    public function setContentDataCompiler($compiler)
+    {
+        $this->contentDataCompiler = (bool) $compiler;
 
         return $this;
     }
@@ -255,6 +289,7 @@ class RequestBuilder
         $request = new DefaultRequest();
         $request->setMethod($this->method);
         $request->setContentData($this->contentData, $this->contentDataCompiler);
+        $request->setAutoContentType($this->autoContentType);
 
         return $request;
     }

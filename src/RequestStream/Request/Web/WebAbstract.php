@@ -66,6 +66,16 @@ abstract class WebAbstract implements WebInterface
     }
 
     /**
+     * Create a new instance
+     *
+     * @param string|Uri $uri
+     */
+    public static function newInstance($uri)
+    {
+        return new static($uri);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function setRequest(RequestInterface $request)

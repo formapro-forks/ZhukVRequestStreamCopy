@@ -75,6 +75,17 @@ class CompilerFactory
     }
 
     /**
+     * Has compiler
+     *
+     * @param string $bool
+     * @return bool
+     */
+    public static function has($name)
+    {
+        return isset(self::$compilers[$name]);
+    }
+
+    /**
      * Compile content data
      *
      * @param string|CompilerInterface $compiler
@@ -87,15 +98,19 @@ class CompilerFactory
 
         if (!$compiler) {
             // Try get compiler from data type
-            if ($data instanceof \DOMDocument) {
-                $compiler = 'xml';
-            } else if ($data instanceof \JsonSerializable) {
-                $compiler = 'json';
-            } else if (is_array($data)) {
-                $compiler = 'json';
-            } else {
-                // Use native compiler
-                $compiler = 'native';
+            switch (true) {
+                case $data instanceof \DOMDocument:
+                    $compiler = 'xml';
+                    break;
+
+                case $data instanceof \JsonSerializable:
+                case $data instanceof \stdClass:
+                case is_array($data):
+                    $compiler = 'json';
+                    break;
+
+                default:
+                    $compiler = 'native';
             }
         }
 

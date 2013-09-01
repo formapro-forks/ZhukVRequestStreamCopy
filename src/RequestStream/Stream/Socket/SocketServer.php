@@ -139,7 +139,7 @@ class SocketServer extends Socket implements SocketServerInterface
 
         if (!$resource) {
             if (!$errorCode && !$errorStr) {
-                throw new SocketErrorException('Socket client not created. Technical error in system.', 0);
+                throw new SocketErrorException('Socket server not created. Technical error in system.', 0);
             } else {
                 throw new SocketErrorException($errorCode . ': ' . $errorStr, $errorCode);
             }

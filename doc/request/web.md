@@ -6,7 +6,7 @@ You can send seb request via Socket Connection.
 ### Step 1 (Create connection)
 
 ```php
-use RequestStream\Request\Web\Socket\Request;
+use RequestStream\Request\Web\Socket\Connection;
 $connection = new Request('http://google.com');
 ```
 

@@ -19,7 +19,7 @@ use RequestStream\Request\Web\Result;
 /**
  * Core for socket web connection
  */
-class Connection extends WebAbstract implements RequestInterface
+class Connection extends WebAbstract implements ConnectionInterface
 {
     /**
      * @var SocketClient

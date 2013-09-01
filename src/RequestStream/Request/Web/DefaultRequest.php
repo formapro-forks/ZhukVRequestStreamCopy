@@ -279,6 +279,12 @@ class DefaultRequest implements RequestInterface
                 }
             }
         }
+
+        if ($this->contentData && !isset($this->headers['Content-Length'])) {
+            // Content data already exists. Add Content-Length header
+            $contentData = CompilerFactory::compile($this->contentDataCompiler, $this->contentData);
+            $this->headers['Content-Length'] = mb_strlen($contentData);
+        }
     }
 
     /**

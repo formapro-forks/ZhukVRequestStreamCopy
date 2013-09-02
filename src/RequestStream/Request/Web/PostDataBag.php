@@ -64,6 +64,23 @@ class PostDataBag extends ParametersBag
     }
 
     /**
+     * Get minimize string
+     *
+     * @return string
+     */
+    public function getMinimizeString()
+    {
+        $postData = array();
+
+        foreach ($this->_storage as $postKey => $postValue) {
+            /** @var PostData $postValue */
+            $postData[] = rawurlencode($postValue->getName()) . '=' . rawurldecode($postValue->getValue());
+        }
+
+        return implode('&', $postData);
+    }
+
+    /**
      * __toString
      */
     public function __toString()

@@ -70,7 +70,7 @@ abstract class WebAbstract implements WebInterface
      *
      * @param string|Uri $uri
      */
-    public static function newInstance($uri)
+    public static function newInstance($uri = null)
     {
         return new static($uri);
     }

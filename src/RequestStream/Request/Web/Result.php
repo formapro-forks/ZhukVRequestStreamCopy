@@ -154,6 +154,16 @@ class Result implements ResultInterface
 
             if (strtolower($key) == 'set-cookie') {
                 $result['cookies']->add(Cookie::parseFromString($value), null);
+            } else if (strtolower($key) == 'content-type') {
+                // Parse content type. Example: Content-Type: application/xml; charset=UTF-8
+                $contentType = explode(';', $value);
+                $result['headers']->add('Content-Type', trim($contentType[0]));
+
+                if (isset($contentType[1])) {
+                    // Charset already exists
+                    $charset = explode('=', $contentType[1]);
+                    $result['headers']->add('Charser', isset($charset[1]) ? trim($charset[1]) : '');
+                }
             } else {
                 $result['headers']->add(trim($key), trim($value, '" '));
             }

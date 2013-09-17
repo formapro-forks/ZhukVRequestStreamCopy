@@ -40,6 +40,8 @@ class ClientSocketTest extends SocketTest
 
     /**
      * Create socket to google connection
+     *
+     * @return SocketClient
      */
     protected function createSocketGoogleConnection()
     {
@@ -74,6 +76,7 @@ class ClientSocketTest extends SocketTest
 
         $this->assertInstanceOf('RequestStream\Stream\Socket\SocketInterface', $socketClient);
 
+        /** @var SocketClient $socketClient */
         $socketClient = $this->createSocketGoogleConnection();
 
         // Create socket to google server

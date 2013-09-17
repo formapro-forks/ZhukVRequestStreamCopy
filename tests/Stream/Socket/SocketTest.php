@@ -29,7 +29,7 @@ abstract class SocketTest extends \PHPUnit_Framework_TestCase
     abstract protected function getSupportedFlags();
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testSocketUriRemoteSocket()
     {

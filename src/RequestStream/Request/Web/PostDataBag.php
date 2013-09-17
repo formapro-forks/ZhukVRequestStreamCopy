@@ -70,14 +70,7 @@ class PostDataBag extends ParametersBag
      */
     public function getMinimizeString()
     {
-        $postData = array();
-
-        foreach ($this->_storage as $postKey => $postValue) {
-            /** @var PostData $postValue */
-            $postData[] = rawurlencode($postValue->getName()) . '=' . rawurldecode($postValue->getValue());
-        }
-
-        return implode('&', $postData);
+        return $this->allAsString('&');
     }
 
     /**
@@ -87,7 +80,7 @@ class PostDataBag extends ParametersBag
     {
         $postData = "\r\n";
 
-        foreach ($this->_storage as $postKey => $postValue) {
+        foreach ($this->_storage as $postValue) {
             $postData .= '--' . $this->generateBoundary() . "\n" .
                 ((string) $postValue) . "\r\n";
         }

@@ -17,6 +17,13 @@ namespace RequestStream\Request\Web;
 interface ResultInterface
 {
     /**
+     * Get request
+     *
+     * @return RequestInterface
+     */
+    public function getRequest();
+
+    /**
      * Get result data
      *
      * @return string
@@ -65,5 +72,5 @@ interface ResultInterface
      * @param float $useTime
      * @return ResultInterface
      */
-    public static function parseFromContent($content, $useTime = null);
+    public static function parseFromContent(RequestInterface $request, $content, $useTime = null);
 }

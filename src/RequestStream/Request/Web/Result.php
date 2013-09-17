@@ -49,9 +49,14 @@ class Result implements ResultInterface
     protected $requestTime;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * Construct
      */
-    public function __construct($code = 200,  $data = null, $protocol = null, HeadersBag $headers = null, CookiesBag $cookies = null, $requestTime = null)
+    public function __construct(RequestInterface $request, $code = 200,  $data = null, $protocol = null, HeadersBag $headers = null, CookiesBag $cookies = null, $requestTime = null)
     {
         $this->code = $code;
         $this->data = $data;
@@ -59,6 +64,15 @@ class Result implements ResultInterface
         $this->headers = $headers === null ? new HeadersBag : $headers;
         $this->cookies = $cookies === null ? new CookiesBag : $cookies;
         $this->requestTime = $requestTime;
+        $this->request = $request;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
@@ -112,7 +126,7 @@ class Result implements ResultInterface
     /**
      * {@inheritDoc}
      */
-    public static function parseFromContent($content, $requestTime = null)
+    public static function parseFromContent(RequestInterface $request, $content, $requestTime = null)
     {
         $content = explode("\r\n\r\n", $content, 2);
 
@@ -123,6 +137,7 @@ class Result implements ResultInterface
         $info = self::parsePageHeaders($content[0]);
 
         return new static(
+            $request,
             (int) $info['code'],
             @$content[1],
             $info['protocol'],

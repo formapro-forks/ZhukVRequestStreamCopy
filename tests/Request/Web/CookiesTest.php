@@ -13,7 +13,6 @@ namespace RequestStream\Request\Web;
 
 use RequestStream\Request\Web\CookiesBag;
 use RequestStream\Request\Web\Cookie;
-use RequestStream\Request\ParametersBagInterface;
 
 /**
  * Cookie, CookiesBag, CookieFilter tests

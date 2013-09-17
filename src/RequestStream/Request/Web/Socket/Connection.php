@@ -103,7 +103,7 @@ class Connection extends WebAbstract implements ConnectionInterface
         $useTime = microtime(true);
 
         // Generate result
-        return Result::parseFromContent($this->socket->read(), microtime(true) - $useTime);
+        return Result::parseFromContent($this->request, $this->socket->read(), microtime(true) - $useTime);
     }
 
     /**

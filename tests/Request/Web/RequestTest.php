@@ -11,17 +11,15 @@
 
 namespace RequestStream\Request\Web;
 
-use RequestStream\Request\Web\Result,
-    RequestStream\Request\Web\ResultInterface,
-    RequestStream\Request\Web\HeadersBag,
-    RequestStream\Request\Web\CookiesBag,
-    RequestStream\Request\Web\PostDataBag,
-    RequestStream\Request\Web\Cookie,
-    RequestStream\Request\Web\RequestInterface,
-    RequestStream\Request\Web\DefaultRequest,
-    RequestStream\Request\Web\PostRequest,
-    RequestStream\Request\Web\Uri,
-    RequestStream\Request\Web\Proxy;
+use RequestStream\Request\Web\Result;
+use RequestStream\Request\Web\HeadersBag;
+use RequestStream\Request\Web\CookiesBag;
+use RequestStream\Request\Web\PostDataBag;
+use RequestStream\Request\Web\RequestInterface;
+use RequestStream\Request\Web\DefaultRequest;
+use RequestStream\Request\Web\PostRequest;
+use RequestStream\Request\Web\Uri;
+use RequestStream\Request\Web\Proxy;
 
 /**
  * Request types test

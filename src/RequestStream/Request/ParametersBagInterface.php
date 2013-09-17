@@ -48,8 +48,18 @@ interface ParametersBagInterface extends \Iterator, \Countable, \ArrayAccess
 
     /**
      * Get all parameters
+     *
+     * @return array
      */
     public function all();
+
+    /**
+     * Get all parameters as string
+     *
+     * @param string $glue      For use in implode parameters
+     * @return string
+     */
+    public function allAsString($glue);
 
     /**
      * Remove all parameters

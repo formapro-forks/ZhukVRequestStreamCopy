@@ -13,8 +13,6 @@ namespace RequestStream\Request\Web;
 
 use RequestStream\Request\Web\HeadersBag;
 use RequestStream\Request\Web\CookiesBag;
-use RequestStream\Request\ParametersBagInterface;
-use RequestStream\Request\Web\Uri;
 
 /**
  * Headers bag test

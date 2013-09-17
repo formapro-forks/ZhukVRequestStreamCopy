@@ -10,7 +10,6 @@
  */
 
 use RequestStream\Request\ParametersBag;
-use RequestStream\Request\ParametersBagInterface;
 
 /**
  * Parameters bag test

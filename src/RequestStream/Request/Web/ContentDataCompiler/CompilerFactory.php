@@ -9,8 +9,7 @@
  * file that was distributed with this source code
  */
 
-namespace RequestStream\Request\Web\ContentDataCompiler;
-use RequestStream\Request\Exception\IncorrectContentDataException;
+namespace RequestStream\Request\Web\ContentDataCompiler;;
 
 /**
  * Content data compiler factory
@@ -58,6 +57,7 @@ class CompilerFactory
      * Get compiler
      *
      * @param string $name
+     * @throws \InvalidArgumentException
      * @return CompilerInterface
      */
     public static function get($name)
@@ -77,7 +77,7 @@ class CompilerFactory
     /**
      * Has compiler
      *
-     * @param string $bool
+     * @param string $name
      * @return bool
      */
     public static function has($name)

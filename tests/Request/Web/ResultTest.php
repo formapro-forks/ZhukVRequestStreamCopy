@@ -11,11 +11,11 @@
 
 namespace RequestStream\Request\Web;
 
-use RequestStream\Request\Web\Result,
-    RequestStream\Request\Web\ResultInterface,
-    RequestStream\Request\Web\HeadersBag,
-    RequestStream\Request\Web\CookiesBag,
-    RequestStream\Request\Web\Cookie;
+use RequestStream\Request\Web\Result;
+use RequestStream\Request\Web\ResultInterface;
+use RequestStream\Request\Web\HeadersBag;
+use RequestStream\Request\Web\CookiesBag;
+use RequestStream\Request\Web\Cookie;
 
 /**
  * Result tests
@@ -28,7 +28,8 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testBase()
     {
         // Default constructor
-        $result = new Result;
+        $request = new DefaultRequest();
+        $result = new Result($request);
         $this->assertTrue($result instanceof ResultInterface);
         $this->assertEquals($result->getCode(), 200);
         $this->assertNull($result->getData());
@@ -40,6 +41,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $headersBag = new HeadersBag(array('Location' => 'http://google.com'));
         $cookiesBag = new CookiesBag(array('k1' => 'v2'));
         $result = new Result(
+            $request,
             302,
             'Moved....',
             '1.0',
@@ -68,7 +70,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
 
             'Body';
 
-        $result = Result::parseFromContent($content);
+        $result = Result::parseFromContent(new DefaultRequest(), $content);
 
         $this->assertTrue($result instanceof ResultInterface);
         $this->assertEquals($result->getProtocol(), 'HTTP/1.1');

@@ -41,21 +41,22 @@ class Connection extends WebAbstract
         curl_setopt($this->curlResource, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curlResource, CURLOPT_URL, (string) $requestUri);
         curl_setopt($this->curlResource, CURLOPT_FOLLOWLOCATION, false); // Disable auto location.
-        curl_setopt($this->curlResource, CURLOPT_HEADER, true);
+        curl_setopt($this->curlResource, CURLOPT_HEADER, true); // Set the return original HTTP headers for next parse
         curl_setopt($this->curlResource, CURLOPT_HTTP_VERSION, $request->getHttpVersion());
         curl_setopt($this->curlResource, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         curl_setopt($this->curlResource, CURLOPT_HTTPHEADER, $this->getHeadersArray($request->getHeaders()));
 
         if (count($request->getCookies())) {
             // Cookies exists
-            curl_setopt($this->curlResource, CURLOPT_COOKIE, $request->getCookies());
+            curl_setopt($this->curlResource, CURLOPT_COOKIE, $request->getCookies()->allAsString(';'));
         }
 
         if ($request instanceof PostRequest) {
             // Post request. Add post fields
             curl_setopt($this->curlResource, CURLOPT_POST, true);
-            curl_setopt($this->curlResource, CURLOPT_POSTFIELDS, $request->getPostData()->getMinimizeString());
+            curl_setopt($this->curlResource, CURLOPT_POSTFIELDS, $request->getPostData()->allAsString('&'));
         } else if ($request->getContentData()) {
+            // Content data already exists. Add as post fields
             $content = CompilerFactory::compile($request->getContentDataCompiler(), $request->getContentData());
             curl_setopt($this->curlResource, CURLOPT_POSTFIELDS, $content);
         }
@@ -63,19 +64,20 @@ class Connection extends WebAbstract
         // Start usage time
         $useTime = microtime(true);
 
-        return Result::parseFromContent(curl_exec($this->curlResource), microtime(true) - $useTime);
+        return Result::parseFromContent($this->request, curl_exec($this->curlResource), microtime(true) - $useTime);
     }
 
     /**
      * Generate headers array
      *
      * @param HeadersBag $headers
+     * @return array
      */
     private function getHeadersArray(HeadersBag $headers)
     {
         $result = array();
 
-        foreach ($headers as $key => $value) {
+        foreach ($headers as $value) {
             $headers[] = (string) $value;
         }
 

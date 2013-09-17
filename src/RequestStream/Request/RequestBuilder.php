@@ -155,6 +155,31 @@ class RequestBuilder
     }
 
     /**
+     * Set post data
+     *
+     * @param array|\Traversable $data
+     * @throws \InvalidArgumentException
+     * @return RequestBuilder
+     */
+    public function setPostData($data)
+    {
+        if (!is_array($data) && !$data instanceof \Traversable) {
+            throw new \InvalidArgumentException(sprintf(
+                'Data must be a array or \Traversable instance, "%s" given.',
+                is_object($data) ? get_class($data) : gettype($data)
+            ));
+        }
+
+        $this->postDataBag->removeAll();
+
+        foreach ($data as $key => $value) {
+            $this->addPostData($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set method
      *
      * @param string $method

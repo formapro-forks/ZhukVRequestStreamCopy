@@ -54,14 +54,19 @@ abstract class WebAbstract implements WebInterface
     /**
      * Construct
      *
-     * @param string|Uri $uri
+     * @param string|Uri|RequestInterface $uri
      */
     public function __construct($uri = null)
     {
-        $this->request = new DefaultRequest();
+        if ($uri instanceof RequestInterface) {
+            // Request instance
+            $this->request = $uri;
+        } else {
+            $this->request = new DefaultRequest();
 
-        if ($uri) {
-            $this->request->setUri($uri instanceof Uri ? $uri : Uri::parseFromString($uri));
+            if ($uri) {
+                $this->request->setUri($uri instanceof Uri ? $uri : Uri::parseFromString($uri));
+            }
         }
     }
 

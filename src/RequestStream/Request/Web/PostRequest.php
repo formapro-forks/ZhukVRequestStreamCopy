@@ -39,7 +39,8 @@ class PostRequest extends DefaultRequest
     /**
      * Set post data
      *
-     * @param PostDataBag|array $postData
+     * @param PostDataBag|array|\Traversable $postData
+     * @throws \InvalidArgumentException
      * @return PostRequest
      */
     public function setPostData($postData)
@@ -47,7 +48,7 @@ class PostRequest extends DefaultRequest
         if (!$postData instanceof PostDataBag && !is_array($postData) && !$postData instanceof \Traversable) {
             throw new \InvalidArgumentException(sprintf(
                 'Post data must be array or PostDataBag instance, "%s" given.',
-                is_object($postData) ? $postData : get_class($postData)
+                is_object($postData) ? get_class($postData) : gettype($postData)
             ));
         }
 

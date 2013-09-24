@@ -104,8 +104,6 @@ class CompilerFactory
                     break;
 
                 case $data instanceof \JsonSerializable:
-                case $data instanceof \stdClass:
-                case is_array($data):
                     $compiler = 'json';
                     break;
 

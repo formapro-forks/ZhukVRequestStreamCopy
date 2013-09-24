@@ -73,17 +73,33 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set headers
+     *
+     * @param array|\Traversable|HeadersBag $headers
+     * @throws \InvalidArgumentException
      */
-    public function setHeaders(HeadersBag $headers)
+    public function setHeaders($headers)
     {
-        $this->headers = $headers;
+        if (!$headers instanceof HeadersBag && !is_array($headers) && !$headers instanceof \Traversable) {
+            throw new \InvalidArgumentException(sprintf(
+                'Headers must be array or HeadersBag instance, "%s" given.',
+                is_object($headers) ? get_class($headers) : gettype($headers)
+            ));
+        }
+
+        if ($headers instanceof HeadersBag) {
+            $this->headers = $headers;
+        } else {
+            $this->headers = new HeadersBag($headers);
+        }
 
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * Get headers
+     *
+     * @return HeadersBag
      */
     public function getHeaders()
     {
@@ -91,17 +107,33 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set cookies
+     *
+     * @param array|\Traversable|CookiesBag $cookies
+     * @throws \InvalidArgumentException
      */
-    public function setCookies(CookiesBag $cookies)
+    public function setCookies($cookies)
     {
-        $this->cookies = $cookies;
+        if (!$cookies instanceof CookiesBag && !is_array($cookies) && !$cookies instanceof \Traversable) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cookies must be array or CookiesBag instance, "%s" given.',
+                is_object($cookies) ? get_class($cookies) : gettype($cookies)
+            ));
+        }
+
+        if ($cookies instanceof CookiesBag) {
+            $this->cookies = $cookies;
+        } else {
+            $this->cookies = new CookiesBag($cookies);
+        }
 
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * Get cookies bag
+     *
+     * @return CookiesBag
      */
     public function getCookies()
     {
@@ -109,7 +141,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set request uri
+     *
+     * @param string|Uri $$uri
      */
     public function setUri($uri)
     {
@@ -123,7 +157,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get uri
+     *
+     * @return Uri
      */
     public function getUri()
     {
@@ -131,7 +167,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set proxy
+     *
+     * @param Proxy $proxy
      */
     public function setProxy(Proxy $proxy)
     {
@@ -141,7 +179,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get proxy
+     *
+     * @return Proxy
      */
     public function getProxy()
     {
@@ -149,7 +189,10 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set content data to request
+     *
+     * @param mixed $contentData
+     * @param null|string $compiler
      */
     public function setContentData($contentData, $compiler = null)
     {
@@ -163,7 +206,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get content data
+     *
+     * @return mixed
      */
     public function getContentData()
     {
@@ -171,7 +216,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set auto control content type, if content data already exists
+     *
+     * @param bool $auto
      */
     public function setAutoContentType($auto = true)
     {
@@ -181,7 +228,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get status of auto control content type
+     *
+     * @return bool
      */
     public function getAutoContentType()
     {
@@ -189,7 +238,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set content data compiler for compile content data
+     *
+     * @param string $compiler
      */
     public function setContentDataCompiler($compiler)
     {
@@ -199,7 +250,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get content data compiler
+     *
+     * @return string
      */
     public function getContentDataCompiler()
     {
@@ -207,7 +260,10 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set request method
+     *
+     * @param string $method
+     * @throws \InvalidArgumentException
      */
     public function setMethod($method)
     {
@@ -227,7 +283,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get request method
+     *
+     * @return string
      */
     public function getMethod()
     {
@@ -235,7 +293,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Set http version of request
+     *
+     * @param string $httpVersion
      */
     public function setHttpVersion($httpVersion)
     {
@@ -245,7 +305,9 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get http version
+     *
+     * @return string
      */
     public function getHttpVersion()
     {
@@ -253,7 +315,7 @@ class DefaultRequest implements RequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Prepare request
      */
     public function prepare()
     {

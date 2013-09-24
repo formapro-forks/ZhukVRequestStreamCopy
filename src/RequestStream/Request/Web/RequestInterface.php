@@ -19,9 +19,9 @@ interface RequestInterface
     /**
      * Set headers bag
      *
-     * @param HeadersBag $headers
+     * @param array|\Traversable|HeadersBag $headers
      */
-    public function setHeaders(HeadersBag $headers);
+    public function setHeaders($headers);
 
     /**
      * Get headers bag
@@ -33,9 +33,9 @@ interface RequestInterface
     /**
      * Set cookies
      *
-     * @param CookiesBag $cookies
+     * @param array|\Traversable|CookiesBag $cookies
      */
-    public function setCookies(CookiesBag $cookies);
+    public function setCookies($cookies);
 
     /**
      * Get cookies

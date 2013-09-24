@@ -164,18 +164,4 @@ class ParametersBag implements ParametersBagInterface
     {
         return $this->_storage;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function allAsString($glue)
-    {
-        $strArray = array();
-
-        foreach ($this->_storage as $key => $value) {
-            $strArray[] = rawurldecode($key) . '=' . rawurldecode($value);
-        }
-
-        return implode($glue, $strArray);
-    }
 }

@@ -227,7 +227,6 @@ abstract class WebAbstract implements WebInterface
         return $this->sendRequest(true);
     }
 
-
     /**
      * Create and sending first request
      */

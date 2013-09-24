@@ -70,7 +70,14 @@ class PostDataBag extends ParametersBag
      */
     public function getMinimizeString()
     {
-        return $this->allAsString('&');
+        $result = array();
+
+        foreach ($this->all() as $post) {
+            /** @var PostData $post */
+            $result[] = urlencode($post->getName()) . '=' . urlencode($post->getValue());
+        }
+
+        return implode('&', $result);
     }
 
     /**

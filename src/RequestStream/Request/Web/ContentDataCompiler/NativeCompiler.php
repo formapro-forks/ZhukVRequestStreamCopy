@@ -21,6 +21,16 @@ class NativeCompiler implements CompilerInterface
      */
     public function compile($data)
     {
+        if (is_array($data)) {
+            $tmp = array();
+
+            foreach ($data as $key => $value) {
+                $tmp[] = urlencode($key) . '=' . urlencode($value);
+            }
+
+            return implode('&', $tmp);
+        }
+
         return $data;
     }
 }

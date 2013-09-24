@@ -11,6 +11,7 @@
 
 namespace RequestStream\Request\Web\Curl;
 use RequestStream\Request\Web\ContentDataCompiler\CompilerFactory;
+use RequestStream\Request\Web\CookiesBag;
 use RequestStream\Request\Web\HeadersBag;
 use RequestStream\Request\Web\PostRequest;
 use RequestStream\Request\Web\Result;
@@ -48,13 +49,13 @@ class Connection extends WebAbstract
 
         if (count($request->getCookies())) {
             // Cookies exists
-            curl_setopt($this->curlResource, CURLOPT_COOKIE, $request->getCookies()->allAsString(';'));
+            curl_setopt($this->curlResource, CURLOPT_COOKIE, implode('; ', $request->getCookies()->all()));
         }
 
         if ($request instanceof PostRequest) {
             // Post request. Add post fields
             curl_setopt($this->curlResource, CURLOPT_POST, true);
-            curl_setopt($this->curlResource, CURLOPT_POSTFIELDS, $request->getPostData()->allAsString('&'));
+            curl_setopt($this->curlResource, CURLOPT_POSTFIELDS, $request->getPostData()->getMinimizeString('&'));
         } else if ($request->getContentData()) {
             // Content data already exists. Add as post fields
             $content = CompilerFactory::compile($request->getContentDataCompiler(), $request->getContentData());
@@ -77,8 +78,8 @@ class Connection extends WebAbstract
     {
         $result = array();
 
-        foreach ($headers as $value) {
-            $headers[] = (string) $value;
+        foreach ($headers as $key => $value) {
+            $result[] = $key . ': ' . (string) $value;
         }
 
         return $result;

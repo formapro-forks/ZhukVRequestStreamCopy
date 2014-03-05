@@ -11,7 +11,7 @@ This version of package requires PHP >= 5.3.3
 
 ```js
 {
-    "required": {
+    "require": {
         "request-stream/request-stream": "dev-master"
     }
 }
